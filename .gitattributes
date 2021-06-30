@@ -1,0 +1,7 @@
+# Auto detect text files and perform LF normalization
+* text=auto
+
+*.pdf linguist-detectable=false
+*.bib linguist-detectable=false
+*.py linguist-detectable=true
+*.Rmd linguist-detectable=true
