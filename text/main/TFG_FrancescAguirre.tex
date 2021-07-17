@@ -143,7 +143,7 @@ Aquest desenvolupament ha donat lloc a nous sistemes OCR basats en xarxes neuron
 
 En aquesta secció es buscaran solucions a un problema pràctic d'OCR. L'objectiu és introduir recursos que ajudin a solucionar un problema del reconeixement de caràcters, i veure quina solució dóna millors resultats. 
 
-Inicialment es buscarà solucionar un problema de reconeixement de caràcters escrits a mà. A primera vista aquest no és un problema fàcil. Hi ha 62 caràcters diferents en l'alfabet anglès, el que implica que a partir d'una imatge, l'algoritme haurà de seleccionar un caràcter entre els 62 disponibles (classes). Si es volgués utilitzar el nostre model per automatitzar completament un procés, es buscaria una precisió propera al 99.5\%. Si es té algú vigilant l'algoritme, llegint que el reconeixement tingui sentit, es pot demanar una precisió més baixa, entre 95\% i 99\%. A més a més, si el que s'analitza són caràcters individuals (sistema tradicional, part de segmentació de text), normalment aquest caràcter forma part d'una paraula, i si aquesta paraula no existeix en el vocabulari, podem fer que el sistema ens avisi (o per exemple, si volem llegir els NIU o id d'alumnes, podem detectar si existeix el NIU reconegut). Per tant, tot i no aconseguir la precisió més alta, el sistema pot seguir sent útil i no fer errors tan fàcilment. 
+Inicialment es buscarà solucionar un problema de reconeixement de caràcters escrits a mà. A primera vista aquest no és un problema fàcil. Hi ha 62 caràcters diferents en l'alfabet anglès, el que implica que a partir d'una imatge, l'algoritme haurà de seleccionar un caràcter entre els 62 disponibles (classes). Si es volgués utilitzar el nostre model per automatitzar completament un procés, es buscaria una precisió propera al 99.5\%. Si es té algú vigilant l'algoritme, llegint que el reconeixement tingui sentit, es pot demanar una precisió més baixa, entre 95\% i 99\%. A més a més, si el que s'analitza són caràcters individuals (sistema tradicional, part de segmentació de text), normalment aquest caràcter forma part d'una paraula, i si aquesta paraula no existeix en el vocabulari, podem fer que el sistema ens avisi (o per exemple, si volem llegir els NIU o id d'alumnes, podem detectar automàticament si existeix el NIU reconegut). Per tant, tot i no aconseguir la precisió més alta, el sistema pot seguir sent útil i no fer errors tan fàcilment. 
 
 % (3.1)
 \subsection{Base de dades}
@@ -175,14 +175,20 @@ La base de dades NIST consisteix en 3669 imatges binaritzades de mostres de form
 
 \item Per classe: Les imatges de caràcters estan agrupats en les 62 carpetes de les diferents classes. Amb aquesta organització, tenim el problema de no poder diferenciar entre tipus de camps. 
 
-\item Per classes unides: Com que amb l'organització per classe hi ha classes massa similars entre elles, s'ha creat una nova organització ajuntant les classes entre minúscules i majúscules  que s'han considerat més similars (C, I, J, K, L, M, O, P, S, U, V, W, X, Y, Z), fent un total de 47 classes diferents.
-
-
-
-
+\item Per fusió de classes: Com que amb l'organització per classe hi ha classes massa similars entre elles, s'ha creat una nova organització ajuntant les classes entre minúscules i majúscules  que s'han considerat més similars (C, I, J, K, L, M, O, P, S, U, V, W, X, Y, Z) i afegint els digits, fent un total de 47 classes diferents.
 \end{itemize}
 
+Els autors també van proposar utilitzar 731,668 imatges de caràcters concretes com a mostra d'entrenament, i 82,587 imatges (amb imatges més desafiants, recol·lectades d'alumnes de secundària) com a mostra de testeig.
 
+La base de dades EMNIST és el resultat d'agafar les imatges de caràcters de NIST, i aplicar una sèrie de tècniques de preprocessament. Això s'ha fet amb l'objectiu de facilitar l'accés a les dades i estandaritzar el preprocessament de les imatges. D'aquesta manera, els investigadors que vulguin probar nous algoritmes de reconeixement d'imatges poden accedir de manera fàcil a aquestes dades, centrar-se completament en la part d''entrenament i reconeixement i poder comparar les tècniques des d'una mateixa base. 
+
+El preprocessament (fig:\ref{fig:emnist1}) consisteix en, a partir de les imatges individuals dels caràcters 128x128, primer s'ha aplicat un filtre de desenfocament gaussià per a la reducció de soroll, i tot seguit es retalla la regió d'interés (ROI de les sigles en anglès \textit{region of interest}) deixant de banda files i columnes de píxels blancs, obtenint una imatge d'un caràcter de mida variable. Després es centrarà la imatge de manera que s'evitin pixels negres que toquin els límits de la imatge, afegint files o columnes de pixels blancs, i finalment s'ajustarà la dimensió de la imatge a 28x28 píxels utilitzant un algoritme d'interpolació bicubic, passant d'una imatge binària a escala grisa (píxels amb intensitat entre 0 i 255)  \cite{EMNIST}.
+
+També s'han aplicat altres passos a la taula de dades, tal com divisió entre mostra d'entrenament i de testeig, aleatorització de les mostres i la creació d'altres organitzacions de carpetes. S'ha afegit l'organització balancejada, que és similar a l'organització per fusió de classes però on cada classe té el mateix nombre d'exemples que la resta, resultant en una mostra de 131,600 exemples i 47 classes, només dígits amb 280,000 exemples i 10 classes, només lletres amb 103,600 exemples i 37 classes i la base de dades MNIST (dígits d'alumnes de secundaria) amb 70,000 exemples i 10 classes. 
+
+
+% (3.2)
+\subsection{Descriptius i visualitzacions}
 
 
 
