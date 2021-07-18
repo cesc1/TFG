@@ -171,27 +171,66 @@ La base de dades NIST consisteix en 3669 imatges binaritzades de mostres de form
 \begin{itemize}
 \item Per autor: Els 3669 formularis s'han omplert per persones diferents. Els caràcters segmentats resultants de cada formular-hi s'han agrupat per persona. Aquesta organització no és útil per OCR, sinó per diferenciar tipus d'escriptura segons individus.
 
-\item Per tipus de camp: Les imatges de caràcters s'han dividit pels diferents blocs del formulari: dígits, minúscules, majúscules i text. Seguidament s'han separat per classe de caràcter. Aquest tipus d'organització pot ser molt útil si volem fer models que només continguin un tipus de camp. Per exemple, hi ha tasques, tals com reconeixement de caràcters de formularis, on es demana que s'escrigui només en majúscules, o potser només es volen reconèixer dígits. Entrenar un model amb un nombre de classes possibles reduït serà molt més fàcil que entrenar un model amb 62 classes. A més a més, hi ha classes de caràcters similars de camps diferents ("0", "o", "O"; "I", "l", "1"), que al redimensionar les dimensions de la imatge costaran molt d'identificar. Els diferents camps són fàcils d'identificar en una frase o paraula (majúscules només a l'inici de noms personals o frases, no barrejar números i lletres en una paraula...), però si es barregen les 62 classes a la vegada i s'intenten reconèixer, la dificultat del problema augmentarà, cosa que s'ha de tenir en compte. Aquest també és un dels motius per al que l'ús de RNN per analitzar línies senceres de text funcionen molt bé, perquè aprenen el llenguatge de manera natural, resolent automàticament el problema dels diferents tipus de camps. 
+\item Per tipus de camp: Les imatges de caràcters s'han dividit pels diferents blocs del formulari: dígits, minúscules, majúscules i text. Seguidament s'han separat per classe de caràcter. Aquest tipus d'organització pot ser molt útil si volem fer models que només continguin un tipus de camp. Per exemple, hi ha tasques, tals com reconeixement de caràcters de formularis, on es demana que s'escrigui només en majúscules, o potser només es volen reconèixer dígits. Entrenar un model amb un nombre de classes possibles reduït serà molt més fàcil que entrenar un model amb 62 classes. A més a més, hi ha classes de caràcters similars de camps diferents ("0", "o", "O"; "I", "l", "1"), que en redimensionar les dimensions de la imatge costaran molt d'identificar. Els diferents camps són fàcils d'identificar en una frase o paraula (majúscules només a l'inici de noms personals o frases, no barrejar números i lletres en una paraula...), però si es barregen les 62 classes a la vegada i s'intenten reconèixer, la dificultat del problema augmentarà, cosa que s'ha de tenir en compte. Aquest també és un dels motius per al que l'ús de RNN per analitzar línies senceres de text funcionen molt bé, perquè aprenen el llenguatge de manera natural, resolent automàticament el problema dels diferents tipus de camps. 
 
 \item Per classe: Les imatges de caràcters estan agrupats en les 62 carpetes de les diferents classes. Amb aquesta organització, tenim el problema de no poder diferenciar entre tipus de camps. 
 
-\item Per fusió de classes: Com que amb l'organització per classe hi ha classes massa similars entre elles, s'ha creat una nova organització ajuntant les classes entre minúscules i majúscules  que s'han considerat més similars (C, I, J, K, L, M, O, P, S, U, V, W, X, Y, Z) i afegint els digits, fent un total de 47 classes diferents.
+\item Per fusió de classes: Com que amb l'organització per classe hi ha classes massa similars entre elles, s'ha creat una nova organització ajuntant les classes entre minúscules i majúscules  que s'han considerat més similars (C, I, J, K, L, M, O, P, S, U, V, W, X, Y, Z) i afegint els dígits, fent un total de 47 classes diferents.
 \end{itemize}
 
-Els autors també van proposar utilitzar 731,668 imatges de caràcters concretes com a mostra d'entrenament, i 82,587 imatges (amb imatges més desafiants, recol·lectades d'alumnes de secundària) com a mostra de testeig.
+Els autors també van proposar utilitzar 731,668 imatges de caràcters concretes com a mostra d'entrenament, i 82,587 imatges (amb imatges més desafiants, recol·lectades d'alumnes de secundària) com a mostra de test.
 
-La base de dades EMNIST és el resultat d'agafar les imatges de caràcters de NIST, i aplicar una sèrie de tècniques de preprocessament. Això s'ha fet amb l'objectiu de facilitar l'accés a les dades i estandaritzar el preprocessament de les imatges. D'aquesta manera, els investigadors que vulguin probar nous algoritmes de reconeixement d'imatges poden accedir de manera fàcil a aquestes dades, centrar-se completament en la part d''entrenament i reconeixement i poder comparar les tècniques des d'una mateixa base. 
+La base de dades EMNIST és el resultat d'agafar les imatges de caràcters de NIST, i aplicar una sèrie de tècniques de preprocessament. Això s'ha fet amb l'objectiu de facilitar l'accés a les dades i estandarditzar el preprocessament de les imatges. D'aquesta manera, els investigadors que vulguin provar nous algoritmes de reconeixement d'imatges poden accedir de manera fàcil a aquestes dades, centrar-se completament en la part d'entrenament  i reconeixement i poder comparar les tècniques des d'una mateixa base. 
 
-El preprocessament (fig:\ref{fig:emnist1}) consisteix en, a partir de les imatges individuals dels caràcters 128x128, primer s'ha aplicat un filtre de desenfocament gaussià per a la reducció de soroll, i tot seguit es retalla la regió d'interés (ROI de les sigles en anglès \textit{region of interest}) deixant de banda files i columnes de píxels blancs, obtenint una imatge d'un caràcter de mida variable. Després es centrarà la imatge de manera que s'evitin pixels negres que toquin els límits de la imatge, afegint files o columnes de pixels blancs, i finalment s'ajustarà la dimensió de la imatge a 28x28 píxels utilitzant un algoritme d'interpolació bicubic, passant d'una imatge binària a escala grisa (píxels amb intensitat entre 0 i 255)  \cite{EMNIST}.
+El preprocessament (fig:\ref{fig:emnist1}) consisteix en, a partir de les imatges individuals dels caràcters 128x128, primer s'ha aplicat un filtre de desenfocament gaussià per a la reducció de soroll, i tot seguit es retalla la regió d'interès (ROI de les sigles en anglès \textit{region of interest}) deixant de banda files i columnes de píxels blancs, obtenint una imatge d'un caràcter de mida variable. Després se centrarà la imatge de manera que s'evitin píxels negres que toquin els límits de la imatge, afegint files o columnes de píxels blancs, i finalment s'ajustarà la dimensió de la imatge a 28x28 píxels utilitzant un algoritme d'interpolació bicúbic, passant d'una imatge binària a escala grisa (píxels amb intensitat entre 0 i 255)  \cite{EMNIST}.
 
-També s'han aplicat altres passos a la taula de dades, tal com divisió entre mostra d'entrenament i de testeig, aleatorització de les mostres i la creació d'altres organitzacions de carpetes. S'ha afegit l'organització balancejada, que és similar a l'organització per fusió de classes però on cada classe té el mateix nombre d'exemples que la resta, resultant en una mostra de 131,600 exemples i 47 classes, només dígits amb 280,000 exemples i 10 classes, només lletres amb 103,600 exemples i 37 classes i la base de dades MNIST (dígits d'alumnes de secundaria) amb 70,000 exemples i 10 classes. 
+També s'han aplicat altres passos a la taula de dades, tal com divisió entre mostra d'entrenament i de test, aleatorització de les mostres i la creació d'altres organitzacions de carpetes. S'ha afegit l'organització balancejada, que és similar a l'organització per fusió de classes, però on cada classe té el mateix nombre d'exemples que la resta, resultant en una mostra de 131,600 exemples i 47 classes, només dígits amb 280,000 exemples i 10 classes, només lletres amb 145,600 exemples i 26 classes i la base de dades MNIST (dígits d'alumnes de secundària) amb 70,000 exemples i 10 classes. L'organització que s'ha utilitzat en aquest projecte és la balancejada majoritàriament, perquè és la que proporciona les prediccions més justes (amb menys biaix), tot i que en contrapartida s'estan sacrificant molts exemples. Puntualment pot ser interessant experimentar amb l'organització per fusió de classes a l'entrenar els models, per veure si augmentar la mida de les dades fa millorar les prediccions. Altres opcions interessants són l'organització per només dígits o només lletres.
 
 
 % (3.2)
 \subsection{Descriptius i visualitzacions}
 
+Quan es treballa amb imatges, és difícil extreure idees de les variables explicatives, perquè són molts píxels en diferents intensitats. Per fer-se una idea de quines imatges ens podem trobar, pot ajudar visualitzar alguns exemples de la base de dades (fig:\ref{fig:sample_random}).
+
+\begin{figure}[hbt!]
+\centering
+	\includegraphics[width=1\textwidth]{images/samples_balanced.png}
+	\captionof{figure}{Submostra aleatòria de 30 exemples de les dades EMNIST amb organització balancejada.}
+	\label{fig:sample_random}
+\end{figure}
+
+De la figura \ref{fig:sample_random}, com que s'han utilitzat les dades amb organització balancejada, es pot comprovar que algunes  de les classes s'han ajuntat en una sola ("W/w", "O/o"...). També podem fer-nos una primera idea de la dificultat del problema. La majoria d'exemples es poden reconèixer a primer cop d'ull, però algun exemple com la segona fila sisena columna amb etiqueta "Z/z", sense cap altre context, una persona ho podria llegir com a "S/s" fàcilment.
+
+Per fer-nos una idea de com són els exemples per classe, s'han visualitzat alguns exemples per classe (Annex fig:\ref{fig:sample_by_label}). Aquesta figura ajuda a veure similituds i diferències entre classes. Es pot veure que a simple vista i sense cap altre context, les imatges amb classes ["1", "I/i", "L/l"] són molt similars, el mateix per les classes ["0", "O/o"], ["q" i "9"], ["h", "n"] i potser ["a", "2"]. També podem veure que hi ha alguns errors d'etiquetació o de formulari, o potser s'ha perdut qualitat d'imatge a causa del preprocessament, però de la classe "G" la columna 6 sembla una "S/s", de la classe "H" la columna 2 sembla una "W/w", de la classe "g" la columna 1 sembla "a" i de la classe "q" la columna 7 sembla "8". Per tant, estem en un problema de classificació que fins i tot a ull humà i sense cap altre context, seria difícil aconseguir una precisió propera al 95\%. 
+
+Una altre idea per a veure aquestes similituds i diferències entre classes, és aplicar tècniques no supervisades de reducció de dimensions.
 
 
+
+
+% Annex
+\clearpage
+\appendix \label{sec:A}
+\section{Gràfics}
+
+
+\begin{figure}[hbt!]
+\centering
+\begin{minipage}{.33\textwidth}
+  \centering
+  \includegraphics[width=.95\linewidth]{images/samples_by_label1.png}
+\end{minipage}%
+\begin{minipage}{.33\textwidth}
+  \centering
+  \includegraphics[width=.95\linewidth]{images/samples_by_label2.png}
+\end{minipage}%
+\begin{minipage}{.33\textwidth}
+  \centering
+  \includegraphics[width=.95\linewidth]{images/samples_by_label3.png}
+\end{minipage}%
+  \captionof{figure}{Submostres aleatòries de la base de dades EMNIST amb organització balancejada. 8 exemples per classe.}
+  \label{fig:sample_by_label}
+\end{figure}
 
 
 
