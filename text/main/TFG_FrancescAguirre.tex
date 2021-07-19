@@ -201,9 +201,21 @@ Quan es treballa amb imatges, és difícil extreure idees de les variables expli
 
 De la figura \ref{fig:sample_random}, com que s'han utilitzat les dades amb organització balancejada, es pot comprovar que algunes  de les classes s'han ajuntat en una sola ("W/w", "O/o"...). També podem fer-nos una primera idea de la dificultat del problema. La majoria d'exemples es poden reconèixer a primer cop d'ull, però algun exemple com la segona fila sisena columna amb etiqueta "Z/z", sense cap altre context, una persona ho podria llegir com a "S/s" fàcilment.
 
-Per fer-nos una idea de com són els exemples per classe, s'han visualitzat alguns exemples per classe (Annex fig:\ref{fig:sample_by_label}). Aquesta figura ajuda a veure similituds i diferències entre classes. Es pot veure que a simple vista i sense cap altre context, les imatges amb classes ["1", "I/i", "L/l"] són molt similars, el mateix per les classes ["0", "O/o"], ["q" i "9"], ["h", "n"] i potser ["a", "2"]. També podem veure que hi ha alguns errors d'etiquetació o de formulari, o potser s'ha perdut qualitat d'imatge a causa del preprocessament, però de la classe "G" la columna 6 sembla una "S/s", de la classe "H" la columna 2 sembla una "W/w", de la classe "g" la columna 1 sembla "a" i de la classe "q" la columna 7 sembla "8". Per tant, estem en un problema de classificació que fins i tot a ull humà i sense cap altre context, seria difícil aconseguir una precisió propera al 95\%. 
+Per fer-nos una idea de com són els exemples per classe, s'han visualitzat alguns exemples per classe (Annex fig:\ref{fig:sample_by_label}). Aquesta figura ajuda a veure similituds i diferències entre classes. Es pot veure que a simple vista i sense cap altre context, les imatges amb classes ["1", "I/i", "L/l"] són molt similars, el mateix per les classes ["0", "O/o"], ["q" i "9"], ["h", "n"] i potser ["a", "2"]. També podem veure que hi ha alguns errors d'etiquetació o de formulari, o potser s'ha perdut qualitat d'imatge a causa del preprocessament, però de la classe "G" la columna 6 sembla una "S/s", de la classe "H" la columna 2 sembla una "W/w", de la classe "g" la columna 1 sembla "a" i de la classe "q" la columna 7 sembla "8". Per tant, estem en un problema de classificació que fins i tot a ull humà i sense cap altre context, seria difícil aconseguir una precisió propera al 95\%. També s'ha calculat la intensitat de pixel mitjà per cada classe i s'ha projectat en una imatge, el que dona una idea força clara de la imatge mitjana en cada classe, o les regions de la imatge en que el caràcter s'acostuma a veure (Annex fig:\ref{fig:samples_by_mean}).
 
-Una altre idea per a veure aquestes similituds i diferències entre classes, és aplicar tècniques no supervisades de reducció de dimensions.
+Una altre idea per a veure aquestes similituds i diferències entre classes, és aplicar tècniques no supervisades de reducció de dimensions. Una tècnica que acostuma a donar bons resultats per a visualitzacions de clusters d'espais d'alta dimensió és el t-Distributed Stochastic Neighbor Embedding (t-SNE). T-SNE és una tècnica de reducció de dimensions no lineal de tipus \textit{manifold learning}, que consisteix en modelar cada exemple d'alta dimensió en un punt de 2-3 dimensions a partir de probabilitats conjuntes, de manera que exemples similars són més propers que exemples diferents, el que ho fa un mètode perfecte per visualitzar clusters.
+
+Com que tenim una mostra d'entrenament i dimensions grans (101,520 exemples, 784 variables), per a reduïr soroll i accelerar temps computacional és bona idea aplicar un segon mètode de reducció de dimensions abans d'utilitzar t-SNE. S'ha utilitzat components principals per reduïr la dimensió fins a un 95\% de la variància explicada (113 variables), i tot seguit s'ha aplicat t-SNE per a reduïr la dimensió a 2 variables. Tot i que és difícil mapejar 47 classes diferents, l'algoritme t-SNE ha funcionat força bé (Annex fig:\ref{fig:pca_tsne}). En la figura \ref{fig:pca_tsne} es mostren les 2 dimensions resultants, on cada color és una classe. En la regió sud es veuen una serie de clusters ben separats ("u", "w", "N", "m", "H"). Seguint el sentit de les agulles del rellotge en la regió sud-oest es veu un cluster de ("0", "O"), juntament amb els clusters ("D" i Q") amb caràcters més arrodonits. A l'oest hi ha els clusters ("G", "C", "e", "6"). Al nord-oest es veuen els ("8", "3", "5"). A la regió nord, nord-est hi ha caràcters formats per un segment central vertical, tal com el gran cluster ("1", "l", "I"), juntament amb els clusters ("T", "J", "7", "f"). Finalment a la regió est hi ha caràcters formats per més d'una línia diagonal al plà ("y", "V", "X"). 
+
+
+\subsection{Preprocessament}
+
+
+% (3.4)
+\subsection{Selecció de models}
+
+
+
 
 
 
@@ -230,6 +242,24 @@ Una altre idea per a veure aquestes similituds i diferències entre classes, és
 \end{minipage}%
   \captionof{figure}{Submostres aleatòries de la base de dades EMNIST amb organització balancejada. 8 exemples per classe.}
   \label{fig:sample_by_label}
+\end{figure}
+
+%%%
+
+\begin{figure}[hbt!]
+\centering
+\includegraphics[width = 1\linewidth]{images/samples_by_mean.png}
+\captionof{figure}{Intensitat de pixel mitjà per classe.}
+\label{fig:samples_by_mean}
+\end{figure}
+
+%%%
+
+\begin{figure}[hbt!]
+\centering
+\includegraphics[width = 1\linewidth]{images/pca_tsne.png}
+\captionof{figure}{Projecció PCA + t-SNE sobre les dades EMNIST balancejades}
+\label{fig:pca_tsne}
 \end{figure}
 
 
