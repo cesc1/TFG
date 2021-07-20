@@ -230,7 +230,7 @@ Una altre idea per a veure aquestes similituds i diferències entre classes, és
 
 Com que tenim una mostra d'entrenament i dimensions grans (101,520 exemples, 784 variables), per a reduïr soroll i accelerar temps computacional és bona idea aplicar un segon mètode de reducció de dimensions abans d'utilitzar t-SNE. S'ha utilitzat components principals per reduïr la dimensió fins a un 95\% de la variància explicada (113 variables), i tot seguit s'ha aplicat t-SNE per a reduïr la dimensió a 2 variables. Tot i que és difícil mapejar 47 classes diferents, l'algoritme t-SNE ha funcionat força bé (Annex fig:\ref{fig:pca_tsne}). En la figura \ref{fig:pca_tsne} es mostren les 2 dimensions resultants, on cada color és una classe. En la regió sud es veuen una serie de clusters ben separats ["u", "w", "N", "m", "H"]. Seguint el sentit de les agulles del rellotge en la regió sud-oest es veu un cluster de ["0", "O"], juntament amb els clusters ["D" i Q"] amb caràcters més arrodonits. A l'oest hi ha els clusters ["G", "C", "e", "6"]. Al nord-oest es veuen els ["8", "3", "5"]. A la regió nord, nord-est hi ha caràcters formats per un segment central vertical, tal com el gran cluster ["1", "l", "I"], juntament amb els clusters ["T", "J", "7", "f"]. Finalment a la regió est hi ha caràcters formats per més d'una línia diagonal al plà ["y", "V", "X"]. 
 
-Si volem veure de mes aprop algunes de les classes més sobreposades tals com ["0", "O/o", "Q", "D"] o ["I/i", "L/l", "1"], podem entrenar un t-SNE amb aquestes classes per separat (fig:\ref{fig:tsne2}). Com era d'esperar, tot i que una part de les imatges de les classes "D" i "Q" es diferencien de la resta, tant "O/o" com "0" es barregen en el mateix cluster. Similarment, tot i que algunes "L/l" i "I/i" es distingueixen de la resta (segurament majuscules "L", o "i"), les classes "L/l", "1" i "I/i" són difícils de distingir. Això ens fa veure que necessitarem models molt complexos si volem arribar a distingir entre aquestes classes, o s'haurà de recorre a altres alternatives tals com modelar números i lletres per separat.
+Si volem veure de mes aprop algunes de les classes més sobreposades tals com ["0", "O/o", "Q", "D"] o ["I/i", "L/l", "1"], podem entrenar un t-SNE amb aquestes classes per separat (fig:\ref{fig:tsne2}). Com era d'esperar, tot i que una part de les imatges de les classes "D" i "Q" es diferencien de la resta, tant "O/o" com "0" es barregen en el mateix cluster. Similarment, tot i que algunes "L/l" i "I/i" es distingueixen de la resta (segurament majuscules "L", o "i"), les classes "L/l", "1" i "I/i" són difícils de distingir. Això fa veure que seran necessaris models molt complexos si es vol arribar a distingir entre aquestes classes, o s'haurà de recorre a altres alternatives tals com modelar números i lletres per separat o modelitzar imatges segmentades per línies.
 
 \begin{figure}%[hbt!]
 \centering
@@ -248,10 +248,19 @@ Si volem veure de mes aprop algunes de les classes més sobreposades tals com ["
 
 
 % (3.3)
-\subsection{Selecció de models}
+\subsection{Preprocessament}
+
+Abans d'entrenar els models, és important haver fet el preprocessament necessari. Normalment es té una mostra d'entrenament amb la que s'entrenaran els models i una mostra de testeig per veure com generalitzen els models finalment. La mostra de testeig no es tocarà mai durant el procés d'entrenament, per tant s'han de tenir alternatives per a validar els models i refinament d'hyperparàmetres, tals com una mostra de validació o l'ús de tècniques tals com \textit{cross validation}. L'alternativa de la mostra de validació és atractiva quan es tenen models computacionalment difícils d'entrenar i una quantitat d'exemples raonable, per tant s'ha fet una petita mostra de validació amb el 10\% dels exemples de la mostra d'entrenament, resultant una mostra d'entrenament amb 101,520 exemples (77.1\%), una mostra de validació amb 11,280 exemples (8.6\%) i una mostra de test amb 18,800 exemples (14.3\%) en l'organització balancejada.
+
+En aprenentatge supervisat, també és típic l'ús d'algoritmes d'optimització online tals com GD, SGD \textit{de les sigles en anglès \textit{Stochastic Gradient Descent}}, que fan una estimació dels paràmetres d'un model de manera iterativa. Aquests algoritmes requereixen una mostra aleatòria per arribar a una bona optimització, per això és important aleatorietzar l'ordre dels exemples. El conjunt de dades EMNIST ja ve distribuït aleatoriament. 
+
+Un últim pas de preprocessament que requereixen alguns algoritmes és l'escalament de variables. Si els inputs tenen rangs o distribucions molt diferents, és recomanat estandaritzar o normalitzar les variables. També dependra del tipus d'algoritme que s'utilitzi, però per norma general, si necessitem que els inputs tinguin un rang fixat es normalitzaran les dades, i si les variables ténen outliers extrems és més recomanable estandaritzar.
+
+Altres tècniques de preprocessament poden ajudar a millorar els models. Es pot aplicar \textit{data augmentation} en imatges a partir de rotacions, donant la volta, reescalament de dimensions, canvis de llum, contrast i deformació elàstica.
 
 
-
+% (3.4)
+\subsection{Models d'aprenentatge automàtic}
 
 
 
