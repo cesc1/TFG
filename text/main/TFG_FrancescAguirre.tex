@@ -11,6 +11,8 @@
 
 \usepackage{hyperref}
 
+\usepackage{booktabs}
+
 
 
 \topmargin 0.0cm
@@ -190,7 +192,28 @@ També s'han aplicat altres passos a la taula de dades, tal com divisió entre m
 % (3.2)
 \subsection{Descriptius i visualitzacions}
 
-Quan es treballa amb imatges, és difícil extreure idees de les variables explicatives, perquè són molts píxels en diferents intensitats. Per fer-se una idea de quines imatges ens podem trobar, pot ajudar visualitzar alguns exemples de la base de dades (fig:\ref{fig:sample_random}).
+La variable dependent d'aquest problema és la classe de la imatge. Sobre aquesta variable, és interessant veure el nombre d'exemples (freqüència absoluta) que hi ha per classe, per saber si la variable està balancejada, i com es distribueix. Però com que podem tenir fins a 62 classes diferents, és massa tediós analitzar classe per classe, per tant s'han calculat descriptius del nombre d'exemples per classe, tals com la mitjana, desviació estàndard, mínim i màxim per tenir una idea general d'aquesta variable, segons l'organització (base de dades) utilitzada (tab:\ref{tab:taula1}). El primer que crida l'atenció és que l'organització per fusió, que és la que té més exemples, té una alta variabilitat d'exemples entre classes, anant des de 3,000 fins a 38,000 exemples. D'aquesta organització, el nombre d'exemples de dígits és més elevat que la resta i té poca variabilitat entre si, mentre que el nombre d'exemples de lletres és menor i amb més variabilitat. Les organitzacions adicionals de la base de dades EMNIST balancejades, dígits i lletres, arreglen el problema del desbalanceig de classes, tot i que es redueixen considerablement el nombre d'exemples. 
+
+\begin{table}[hbt!]
+\centering
+\begin{tabular}{lcccccc}  
+\toprule
+                            & Fusió & Fusió dígits & Fusió lletres & Balancejat & Dígits & Lletres \\  
+\midrule
+nombre exemples    & 697,932 & 345,426  & 352,506 & 112,800 & 240,000 & 124,800 \\
+nombre classes        & 47         & 10          & 37         & 47        & 10          & 26      \\
+Mitjana                   & 14,849   & 34,542    & 9527     & 2,400    & 24,000    & 4,800 \\
+Desviació estandard  & 11,743   & 1,713      & 6423    & 0           & 0            & 0       \\
+Mínim                     & 2,534      & 31,280   & 2534    & 2,400      & 24,000   & 4,800 \\
+Màxim                    & 38,304    & 38,304   & 27664   & 2,400      & 24,000   & 4,800 \\
+\bottomrule
+\end{tabular}
+\captionof{table}{Descriptius sobre el nombre d'exemples per classe. Es descriu la mitjana i desviació de la freqüència absoluta d'exemples per classe, seguit de la freqüència mínima i la màxima, segons les diferents organitzacions de la base de dades EMNIST.}
+\label{tab:taula1}
+\end{table}
+
+
+Passant a les variables explicatives, quan es treballa amb imatges és difícil extreure idees de les variables independents, perquè són molts píxels en diferents intensitats. Per fer-se una idea de quines imatges ens podem trobar, visualitzar alguns exemples de la base de dades pot ajudar (fig:\ref{fig:sample_random}).
 
 \begin{figure}[hbt!]
 \centering
@@ -205,13 +228,26 @@ Per fer-nos una idea de com són els exemples per classe, s'han visualitzat algu
 
 Una altre idea per a veure aquestes similituds i diferències entre classes, és aplicar tècniques no supervisades de reducció de dimensions. Una tècnica que acostuma a donar bons resultats per a visualitzacions de clusters d'espais d'alta dimensió és el t-Distributed Stochastic Neighbor Embedding (t-SNE). T-SNE és una tècnica de reducció de dimensions no lineal de tipus \textit{manifold learning}, que consisteix en modelar cada exemple d'alta dimensió en un punt de 2-3 dimensions a partir de probabilitats conjuntes, de manera que exemples similars són més propers que exemples diferents, el que ho fa un mètode perfecte per visualitzar clusters.
 
-Com que tenim una mostra d'entrenament i dimensions grans (101,520 exemples, 784 variables), per a reduïr soroll i accelerar temps computacional és bona idea aplicar un segon mètode de reducció de dimensions abans d'utilitzar t-SNE. S'ha utilitzat components principals per reduïr la dimensió fins a un 95\% de la variància explicada (113 variables), i tot seguit s'ha aplicat t-SNE per a reduïr la dimensió a 2 variables. Tot i que és difícil mapejar 47 classes diferents, l'algoritme t-SNE ha funcionat força bé (Annex fig:\ref{fig:pca_tsne}). En la figura \ref{fig:pca_tsne} es mostren les 2 dimensions resultants, on cada color és una classe. En la regió sud es veuen una serie de clusters ben separats ("u", "w", "N", "m", "H"). Seguint el sentit de les agulles del rellotge en la regió sud-oest es veu un cluster de ("0", "O"), juntament amb els clusters ("D" i Q") amb caràcters més arrodonits. A l'oest hi ha els clusters ("G", "C", "e", "6"). Al nord-oest es veuen els ("8", "3", "5"). A la regió nord, nord-est hi ha caràcters formats per un segment central vertical, tal com el gran cluster ("1", "l", "I"), juntament amb els clusters ("T", "J", "7", "f"). Finalment a la regió est hi ha caràcters formats per més d'una línia diagonal al plà ("y", "V", "X"). 
+Com que tenim una mostra d'entrenament i dimensions grans (101,520 exemples, 784 variables), per a reduïr soroll i accelerar temps computacional és bona idea aplicar un segon mètode de reducció de dimensions abans d'utilitzar t-SNE. S'ha utilitzat components principals per reduïr la dimensió fins a un 95\% de la variància explicada (113 variables), i tot seguit s'ha aplicat t-SNE per a reduïr la dimensió a 2 variables. Tot i que és difícil mapejar 47 classes diferents, l'algoritme t-SNE ha funcionat força bé (Annex fig:\ref{fig:pca_tsne}). En la figura \ref{fig:pca_tsne} es mostren les 2 dimensions resultants, on cada color és una classe. En la regió sud es veuen una serie de clusters ben separats ["u", "w", "N", "m", "H"]. Seguint el sentit de les agulles del rellotge en la regió sud-oest es veu un cluster de ["0", "O"], juntament amb els clusters ["D" i Q"] amb caràcters més arrodonits. A l'oest hi ha els clusters ["G", "C", "e", "6"]. Al nord-oest es veuen els ["8", "3", "5"]. A la regió nord, nord-est hi ha caràcters formats per un segment central vertical, tal com el gran cluster ["1", "l", "I"], juntament amb els clusters ["T", "J", "7", "f"]. Finalment a la regió est hi ha caràcters formats per més d'una línia diagonal al plà ["y", "V", "X"]. 
+
+Si volem veure de mes aprop algunes de les classes més sobreposades tals com ["0", "O/o", "Q", "D"] o ["I/i", "L/l", "1"], podem entrenar un t-SNE amb aquestes classes per separat (fig:\ref{fig:tsne2}). Com era d'esperar, tot i que una part de les imatges de les classes "D" i "Q" es diferencien de la resta, tant "O/o" com "0" es barregen en el mateix cluster. Similarment, tot i que algunes "L/l" i "I/i" es distingueixen de la resta (segurament majuscules "L", o "i"), les classes "L/l", "1" i "I/i" són difícils de distingir. Això ens fa veure que necessitarem models molt complexos si volem arribar a distingir entre aquestes classes, o s'haurà de recorre a altres alternatives tals com modelar números i lletres per separat.
+
+\begin{figure}%[hbt!]
+\centering
+\begin{minipage}{.5\textwidth}
+  \centering
+  \includegraphics[width=.95\linewidth]{images/tsne_sub1.png}
+\end{minipage}%
+\begin{minipage}{.5\textwidth}
+  \centering
+  \includegraphics[width=.95\linewidth]{images/tsne_sub2.png}
+\end{minipage}%
+  \captionof{figure}{t-SNE sobre les dades EMNIST balancejades. A la figura de l'esquerra s'han utilitzat les classes ["0", "O/o", "Q", "D"]. A la figura de la dreta s'han utilitzat les classes ["I/i", "L/l", "1"].}
+  \label{fig:tsne2}
+\end{figure}
 
 
-\subsection{Preprocessament}
-
-
-% (3.4)
+% (3.3)
 \subsection{Selecció de models}
 
 
