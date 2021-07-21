@@ -124,7 +124,7 @@ Tradicionalment, un problema típic d'OCR es pot dividir en subtasques en forma 
 
 \item Extracció de variables: A partir de la segmentació interna, se seleccionarà un conjunt de variables que maximitzi el reconeixement amb el nombre menor d'elements. L'objectiu és capturar característiques essencials dels símbols per posteriorment entrenar el model. La extracció de variables més sencilla sería utilitzar la matriu de pixels de la imatge, tot i que utilitzar tantes variables pot provocar problemes de dimensionalitat en molts dels models. Utilitzant extracció de variables, s'utilitzarien característiques que descriguin els caràcters, tals com llargades de segments en regions de la imatge, angles de curvatura...
 
-\item Entrenament i reconeixement: Aplicació de tècniques de reconeixement de patrons per a classificar el caràcter. Aquí és on podem utilitzar tècniques estadístiques i de machine learning per fer la classificació, tals com (TODO)...
+\item Entrenament i reconeixement: Aplicació de tècniques de reconeixement de patrons per a classificar el caràcter. Aquí és on podem utilitzar tècniques estadístiques i de machine learning per fer la classificació. Alguns models que funcionen força bé són SVM (de l'anglès \textit{support vector machine} i ANN (de l'anglès \textit{artificial neural network}.
 
 \item Reagrupació de caràcters a paraules, paraules a línies, fins a tenir el document complet.
 \end{enumerate}
@@ -213,7 +213,7 @@ Màxim                    & 38,304    & 38,304   & 27664   & 2,400      & 24,000
 \end{table}
 
 
-Passant a les variables explicatives, quan es treballa amb imatges és difícil extreure idees de les variables independents, perquè són molts píxels en diferents intensitats. Per fer-se una idea de quines imatges ens podem trobar, visualitzar alguns exemples de la base de dades pot ajudar (fig:\ref{fig:sample_random}).
+Passant a les variables explicatives, quan es treballa amb imatges és difícil extreure idees de les variables independents, perquè són molts píxels en diferents intensitats. Per fer-se una idea de quines imatges ens podem trobar,  pot ajudar visualitzar alguns exemples de la base de dades (fig:\ref{fig:sample_random}).
 
 \begin{figure}[hbt!]
 \centering
@@ -222,15 +222,15 @@ Passant a les variables explicatives, quan es treballa amb imatges és difícil 
 	\label{fig:sample_random}
 \end{figure}
 
-De la figura \ref{fig:sample_random}, com que s'han utilitzat les dades amb organització balancejada, es pot comprovar que algunes  de les classes s'han ajuntat en una sola ("W/w", "O/o"...). També podem fer-nos una primera idea de la dificultat del problema. La majoria d'exemples es poden reconèixer a primer cop d'ull, però algun exemple com la segona fila sisena columna amb etiqueta "Z/z", sense cap altre context, una persona ho podria llegir com a "S/s" fàcilment.
+De la figura \ref{fig:sample_random}, com que s'han utilitzat les dades amb organització balancejada, es pot comprovar que algunes  de les classes s'han ajuntat en una sola ("W/w", "O/o"...). També podem fer-nos una primera idea de la dificultat del problema. La majoria d'exemples es poden reconèixer a primer cop d'ull, però algun exemple com la segona fila sisena columna amb etiqueta "Z/z", sense cap altre context, una persona ho podria llegir com a "2".
 
 Per fer-nos una idea de com són els exemples per classe, s'han visualitzat alguns exemples per classe (Annex fig:\ref{fig:sample_by_label}). Aquesta figura ajuda a veure similituds i diferències entre classes. Es pot veure que a simple vista i sense cap altre context, les imatges amb classes ["1", "I/i", "L/l"] són molt similars, el mateix per les classes ["0", "O/o"], ["q" i "9"], ["h", "n"] i potser ["a", "2"]. També podem veure que hi ha alguns errors d'etiquetació o de formulari, o potser s'ha perdut qualitat d'imatge a causa del preprocessament, però de la classe "G" la columna 6 sembla una "S/s", de la classe "H" la columna 2 sembla una "W/w", de la classe "g" la columna 1 sembla "a" i de la classe "q" la columna 7 sembla "8". Per tant, estem en un problema de classificació que fins i tot a ull humà i sense cap altre context, seria difícil aconseguir una precisió propera al 95\%. També s'ha calculat la intensitat de pixel mitjà per cada classe i s'ha projectat en una imatge, el que dona una idea força clara de la imatge mitjana en cada classe, o les regions de la imatge en que el caràcter s'acostuma a veure (Annex fig:\ref{fig:samples_by_mean}).
 
 Una altre idea per a veure aquestes similituds i diferències entre classes, és aplicar tècniques no supervisades de reducció de dimensions. Una tècnica que acostuma a donar bons resultats per a visualitzacions de clusters d'espais d'alta dimensió és el t-Distributed Stochastic Neighbor Embedding (t-SNE). T-SNE és una tècnica de reducció de dimensions no lineal de tipus \textit{manifold learning}, que consisteix en modelar cada exemple d'alta dimensió en un punt de 2-3 dimensions a partir de probabilitats conjuntes, de manera que exemples similars són més propers que exemples diferents, el que ho fa un mètode perfecte per visualitzar clusters.
 
-Com que tenim una mostra d'entrenament i dimensions grans (101,520 exemples, 784 variables), per a reduïr soroll i accelerar temps computacional és bona idea aplicar un segon mètode de reducció de dimensions abans d'utilitzar t-SNE. S'ha utilitzat components principals per reduïr la dimensió fins a un 95\% de la variància explicada (113 variables), i tot seguit s'ha aplicat t-SNE per a reduïr la dimensió a 2 variables. Tot i que és difícil mapejar 47 classes diferents, l'algoritme t-SNE ha funcionat força bé (Annex fig:\ref{fig:pca_tsne}). En la figura \ref{fig:pca_tsne} es mostren les 2 dimensions resultants, on cada color és una classe. En la regió sud es veuen una serie de clusters ben separats ["u", "w", "N", "m", "H"]. Seguint el sentit de les agulles del rellotge en la regió sud-oest es veu un cluster de ["0", "O"], juntament amb els clusters ["D" i Q"] amb caràcters més arrodonits. A l'oest hi ha els clusters ["G", "C", "e", "6"]. Al nord-oest es veuen els ["8", "3", "5"]. A la regió nord, nord-est hi ha caràcters formats per un segment central vertical, tal com el gran cluster ["1", "l", "I"], juntament amb els clusters ["T", "J", "7", "f"]. Finalment a la regió est hi ha caràcters formats per més d'una línia diagonal al plà ["y", "V", "X"]. 
+Com que tenim una mostra d'entrenament i dimensions grans (101,520 exemples, 784 variables), per a reduïr soroll i accelerar temps computacional és bona idea aplicar un segon mètode de reducció de dimensions abans d'utilitzar t-SNE. S'ha utilitzat components principals per reduïr la dimensió fins a un 95\% de la variància explicada (113 variables), i tot seguit s'ha aplicat t-SNE per a reduïr la dimensió a 2 variables. Tot i que és difícil mapejar 47 classes diferents, l'algoritme t-SNE ha funcionat força bé (Annex fig:\ref{fig:pca_tsne}). En la figura \ref{fig:pca_tsne} es mostren les 2 dimensions resultants, on cada color és una classe. En la regió sud es veuen una serie de clusters ben separats ["u", "w", "N", "m", "H"]. Seguint el sentit de les agulles del rellotge en la regió sud-oest es veu un cluster de ["0", "O"], juntament amb els clusters ["D" i Q"], indicant que per aquesta zona els caracter són arrodonits. A l'oest hi ha els clusters ["G", "C", "e", "6"]. Al nord-oest es veuen els ["8", "3", "5"]. A la regió nord, nord-est hi ha caràcters formats per un segment central vertical, tal com el gran cluster ["1", "l", "I"], juntament amb els clusters ["T", "J", "7", "f"]. Finalment a la regió est hi ha caràcters formats per més d'una línia diagonal al plà ["y", "V", "X"]. 
 
-Si volem veure de mes aprop algunes de les classes més sobreposades tals com ["0", "O/o", "Q", "D"] o ["I/i", "L/l", "1"], podem entrenar un t-SNE amb aquestes classes per separat (fig:\ref{fig:tsne2}). Com era d'esperar, tot i que una part de les imatges de les classes "D" i "Q" es diferencien de la resta, tant "O/o" com "0" es barregen en el mateix cluster. Similarment, tot i que algunes "L/l" i "I/i" es distingueixen de la resta (segurament majuscules "L", o "i"), les classes "L/l", "1" i "I/i" són difícils de distingir. Això fa veure que seran necessaris models molt complexos si es vol arribar a distingir entre aquestes classes, o s'haurà de recorre a altres alternatives tals com modelar números i lletres per separat o modelitzar imatges segmentades per línies.
+Si volem veure de mes aprop algunes de les classes més sobreposades tals com ["0", "O/o", "Q", "D"] o ["I/i", "L/l", "1"], podem entrenar un t-SNE amb aquestes classes per separat (fig:\ref{fig:tsne2}). Com era d'esperar, tot i que una part de les imatges de les classes "D" i "Q" es diferencien de la resta, tant "O/o" com "0" es barregen en el mateix cluster. Similarment, tot i que algunes "L/l" i "I/i" es distingueixen de la resta (segurament majuscules "L", o "i"), les classes "L/l", "1" i "I/i" són difícils de distingir. Això fa veure que seran necessaris models molt complexos si es vol arribar a distingir entre aquestes classes, o s'haurà de recorre a altres alternatives tals com modelar números i lletres per separatm modelitzar imatges segmentades per línies o aconseguir informació de context adicional (en quina posició s'està de la paraula, paraula després d'un punt...).
 
 \begin{figure}%[hbt!]
 \centering
@@ -254,16 +254,113 @@ Abans d'entrenar els models, és important haver fet el preprocessament necessar
 
 En aprenentatge supervisat, també és típic l'ús d'algoritmes d'optimització online tals com GD, SGD \textit{de les sigles en anglès \textit{Stochastic Gradient Descent}}, que fan una estimació dels paràmetres d'un model de manera iterativa. Aquests algoritmes requereixen una mostra aleatòria per arribar a una bona optimització, per això és important aleatorietzar l'ordre dels exemples. El conjunt de dades EMNIST ja ve distribuït aleatoriament. 
 
-Un últim pas de preprocessament que requereixen alguns algoritmes és l'escalament de variables. Si els inputs tenen rangs o distribucions molt diferents, és recomanat estandaritzar o normalitzar les variables. També dependra del tipus d'algoritme que s'utilitzi, però per norma general, si necessitem que els inputs tinguin un rang fixat es normalitzaran les dades, i si les variables ténen outliers extrems és més recomanable estandaritzar.
+Un últim pas de preprocessament que requereixen alguns algoritmes és l'escalament de variables. Si els inputs tenen rangs o distribucions molt diferents, és important estandaritzar o normalitzar les variables. També dependra del tipus d'algoritme que s'utilitzi, però per norma general, si necessitem que els inputs tinguin un rang fixat es normalitzaran les dades, i si les variables ténen outliers importants (valors extrems) és més recomanable estandaritzar.
 
-Altres tècniques de preprocessament poden ajudar a millorar els models. Es pot aplicar \textit{data augmentation} en imatges a partir de rotacions, donant la volta, reescalament de dimensions, canvis de llum, contrast i deformació elàstica.
-
+Altres tècniques de preprocessament poden ajudar a millorar i regularitzar els models. Una opció és utilitzar \textit{data augmentation} en imatges a partir de rotacions, donant la volta, reescalament de dimensions, canvis de llum, contrast i deformació elàstica. Hi ha models que no funcionen bé quan en nombre de variables i exemples és molt gran, de manera que és recomanable aplicar el pas d'extracció de variables. Altres opcions són aplicar tècniques de reducció de dimensions tals com components principals o l'ús d'\textit{autoencoders}, per en alguns casos accelerar el temps d'entrenament i reduir el soroll, tot i que normalment es perdrà precisió.
 
 % (3.4)
 \subsection{Models d'aprenentatge automàtic}
 
+% X Regressió logistica multinomial
+% X Lineal SVM
+% X Kernel SVM (least squares SVM?)
+% X Random Forest
+% X ANN
+% X CNN
+% LVQ
+% Naive Bayes classifier
+% LDA
+
+En aquesta part del treball s'han de buscar models candidats. En principi, qualsevol model de classificació pot ser utilitzat, però n'hi haura que classificaran millor i més eficientment les dades EMNIST. Aquesta és una tasca de classificació multiclasse, però encara que un model sigui per naturalesa de classificació binaria (ex: model logistic, SVM), es poden utilitzar estrategies com OvO (\textit{one versus one}) o OvA (\textit{one versus all}) i fer-los servir com a classificació multiclasse. 
+
+Primer s'han entrenat tots els models sense un tuneig d'hyperparàmetres excesiu i amb una mostra reduïda, i s'han avaluat tant sobre la mostra d'entrenament com sobre la de validació, per comprobar l'\textit{overfitting}/\textit{underfitting} dels models (tab:\ref{tab:taula2}). A partir d'aquí s'han triat els models que han semblat tenir major potencial, s'han tunejaran els hyperparàmetres i s'han entrenat els models finals. 
+
+\subsubsection{Regressió logística multinomial}
+
+[TODO explicació general]
+
+Abans d'entrenar el model, és necessari reduïr les dimensions amb alguna tècnica com PCA, perquè en càs contrari és complica trobar una solució optima fàcilment (sense gastar recursos computacionals). Amb 113 components s'ha conservant el 95\% de la variància explicada, i s'han escalat els inputs. El model ha estat entrenat amb una submostra de 10,000 exemples, i s'ha utilitzat l'optimitzador \textit{limited-memory BFGS} amb regularització l2 i l'hyperparàmetre C = 1, amb una tolerancia de 0.001 i 500 iteracions màximes.
+
+\subsubsection{Lineal SVM}
+
+[TODO explicació general]
+
+Per entrenar el lineal SVM, s'ha utilitzat una submostra d'entrenament de 10,000 exemples. Per a l'optimització s'ha utilitzat SGD (de les sigles en anglès \textit{stochastic gradient descent}) amb regularització l2 i hyperparàmetre factor de regularització, alpha = 1e-4 (com més alt, més regularització), amb una tolerancia de 5e-3 i 500 iteracions màximes.
+
+\subsubsection{Kernel SVM}
+
+[TODO explicació general]
+
+En aquest cas, per entrenar el Kernel SVM s'ha utilitzat una submostra d'entrenament de 5,000 exemples. Això és degut a que el temps computacional al entrenar Kernel SVM és entre $O(n^2 p)$  i $O(n^3 p)$, de manera que si augmentem el nombre d'exemples sense cura l'entrenament podria durar hores. Una alternativa és utilitzar SGD utilitzant una aproximació \textit{Nystroem} a priori. S'ha utilitzat un kernel gaussià RBF (de les sigles en anglès \textit{radial basis function}), amb regularització l2 i hyperparàmetre C = 1, amb una tolerància de 0.001 i 500 iteracions màximes. 
+
+\subsubsection{Random Forest}
+
+[TODO explicació general]
+
+Per entrenar el random forest s'ha utilitzat una submostra d'entrenament de 10,000 exemples, utilitzant 100 arbres sense restriccions i amb mostres \textit{bootstrap}. 
+
+\subsubsection{ANN}
+
+[TODO explicació general]
+
+Per entrenar la xarxa neuronal o MLP (de les sigles en anglès multilayer perceptron), s'ha utilitzat una estructura seqüencial amb tres capes ocultes completament conectades \ref{fig:nn_estructure}. La primera capa d'inputs és la imatge de dimensions 28x28, la segona capa és de preprocessament, aplanant les dimensions a 784 neurones input, la següent és la primera capa oculta amb 400 neurones, la segona capa oculta té 200 neurones, la tercera té 100 neurones, i finalment la última capa és d'outputs. Les capes ocultes tenen funció d'activació relu, i la última capa té funció d'activació \textit{softmax}. 
 
 
+
+
+\subsubsection{CNN}
+
+[TODO explicació general]
+
+
+
+
+
+
+
+
+
+
+% (3.5)
+\subsection{Resultats}
+
+\begin{table}[hbt!]
+\centering
+\begin{tabular}{lcccc}  
+\toprule
+                                              & N         & T (s)  & Acc train (\%) & Acc val (\%) \\  
+\midrule
+Regressió logística multinomial  & 10,000 & 5   & 77.0        & 63.4 \\
+Lineal SVM                              & 10,000 & 41  & 73.3       & 61.8  \\
+Lineal SVM amb PCA                & 10,000 & 5    & 70.4       & 56.7  \\
+Kernel SVM                             & 5,000   & 5    & 89.0       & 68.8  \\
+Kernel SVM amb PCA               & 5,000   & 3    & 94.5       & 64.8  \\
+Random Forest                        & 10,000 & 10  & 100.0     & 72.3 \\
+Random Forest amb PCA          & 10,000 & 14  & 100.0     & 66.2  \\
+ANN 					     & 101,520 * 5 & 42 & 80.3 & 80.2  \\
+ANN amb PCA                         & 101,520 * 5 & 20 & 59.3 & 55.4 \\
+CNN					     & 10,000 * 5   & 158 & 75.3 & 80.4 \\
+\bottomrule
+\end{tabular}
+\captionof{table}{Models amb el seu rendiment (precisió). Les columnes són el nom del model, el nombre d'exemples en la mostra de d'entrenament (* epoch), els segons a entrenar el model, la precisió sobre la mostra d'entrenament i la precisió sobre la mostra de validació.}
+\label{tab:taula2}
+\end{table}
+
+A la taula (tab:\ref{tab:taula2}) s'han obtingut els resultats dels primers models plantejats. Els models amb la major precisió en la mostra de validació són la CNN, la ANN, el random forest i el kernel SVM. Especialment les xarxes neuronals, tenen una precisió major en la mostra de validació que en la mostra d'entrenament, el que indica que els models estan \textit{underfitting}, i si utilitzem la mostra d'entrenament completa, augmentem el nombre d'\textit{epochs} o augmentem la complexitat de la xarxa, podriem obtenir millors resultats. Per el contrari, el random forest i el kernel SVM estan overfitting, si augmentem els hyperparàmetres de regularització és possible que augmenti la precisió en noves dades. El següent pas és afinar els models retocant els hyperparàmetres i acabant d'entrenar els models.
+
+
+
+
+
+
+% (4)
+\section{Conclusions}
+
+[TODO]
+
+Parlar sobre que queda per explorar:
+
+- Reducció de dimensions utilitzant autoencoders-
 
 % Annex
 \clearpage
@@ -305,6 +402,15 @@ Altres tècniques de preprocessament poden ajudar a millorar els models. Es pot 
 \includegraphics[width = 1\linewidth]{images/pca_tsne.png}
 \captionof{figure}{Projecció PCA + t-SNE sobre les dades EMNIST balancejades}
 \label{fig:pca_tsne}
+\end{figure}
+
+%%%
+
+\begin{figure}[hbt!]
+\centering
+\includegraphics[width = 0.65\linewidth]{images/nn_estructure.png}
+\captionof{figure}{Capes de la xarxa neuronal a modelitzar, amb el nombre de neurones per capa d'input i output.}
+\label{fig:nn_estructure}
 \end{figure}
 
 
