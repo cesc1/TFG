@@ -5,3 +5,4 @@
 *.bib linguist-detectable=false
 *.py linguist-detectable=true
 *.Rmd linguist-detectable=true
+*.joblib linguist-detectable=false

@@ -1,3 +1,5 @@
 .venv/
 .vscode/
 data/
+code/models/svc_model1.joblib
+*.joblib
