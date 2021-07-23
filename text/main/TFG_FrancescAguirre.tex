@@ -56,9 +56,10 @@
 
 \author
 {\large{Francesc Aguirre$^{1}$} \\
- \small{Alberto Debernardi}\\
+ \small{Alberto Debernardi$^{2}$}\\
 \\
 \normalsize{$^{1}$Autor: Grau d'estadística Aplicada 2020-21}\\
+\normalsize{$^{2}$Tutor}\\
 }
 
 % Include the date command, but leave its argument blank.
@@ -86,7 +87,15 @@
 % Place your abstract within the special {sciabstract} environment.
 
 \begin{sciabstract}
-  Aquí anirà el resum en cat, cast, ang.
+
+Aquest és un projecte de recerca, on s'ha investigat i exposat l'ampli tema d'OCR i tècniques d'aprenentatge supervisat que poden ajudar a solucionar el repte. Els coneixements s'han posat a prova amb un problema pràctic de classificació de caràcters, utilitzant la base de dades EMNIST. S'han fet servir tècniques de visualització, i models supervisats per a les prediccions de classes.
+
+\end{sciabstract}
+
+\noindent\rule{16cm}{0.4pt}
+
+\begin{sciabstract}
+This is a recearch project, where the broad topic of OCR and supervised learning techniques that can help solve the challenge has been researched and exposed. Knowledge has been tested with a practical character classification problem, using the EMNIST database. Visualization techniques, and supervised models have been used for class predictions.
 \end{sciabstract}
 
 \clearpage
@@ -196,7 +205,7 @@ També s'han aplicat altres passos a la taula de dades, tals com la divisió ent
 % (3.2)
 \subsection{Descriptius i visualitzacions}
 
-La variable dependent d'aquest problema és la classe de la imatge. Sobre aquesta variable, és interessant veure el nombre d'exemples (freqüència absoluta) que hi ha per classe, per a saber si la variable està balancejada, i com es distribueix. Però com que podem tenir fins a 62 classes diferents, és massa tediós analitzar classe per classe, per tant s'han calculat descriptius del nombre d'exemples per classe, tals com la mitjana, desviació estàndard, mínim i màxim per tenir una idea general d'aquesta variable, segons l'organització (base de dades) utilitzada (tab:\ref{Taula :taula1}). El primer que crida l'atenció és que l'organització per fusió, que és la que té més exemples, té una alta variabilitat d'exemples entre classes, des dels 3,000 fins als 38,000 exemples. D'aquesta organització, el nombre d'exemples de dígits és més elevat que el de la resta i té poca variabilitat entre si, mentre que el nombre d'exemples de lletres és menor i amb més variabilitat. Les organitzacions addicionals de la base de dades EMNIST balancejades, dígits i lletres, resolen el problema del desbalanceig de classes, tot i que es redueix considerablement el nombre d'exemples. 
+La variable dependent d'aquest problema és la classe de la imatge. Sobre aquesta variable, és interessant veure el nombre d'exemples (freqüència absoluta) que hi ha per classe, per a saber si la variable està balancejada, i com es distribueix. Però com que podem tenir fins a 62 classes diferents, és massa tediós analitzar classe per classe, per tant s'han calculat descriptius del nombre d'exemples per classe, tals com la mitjana, desviació estàndard, mínim i màxim per tenir una idea general d'aquesta variable, segons l'organització (base de dades) utilitzada (Taula \ref{tab:taula1}). El primer que crida l'atenció és que l'organització per fusió, que és la que té més exemples, té una alta variabilitat d'exemples entre classes, des dels 3,000 fins als 38,000 exemples. D'aquesta organització, el nombre d'exemples de dígits és més elevat que el de la resta i té poca variabilitat entre si, mentre que el nombre d'exemples de lletres és menor i amb més variabilitat. Les organitzacions addicionals de la base de dades EMNIST balancejades, dígits i lletres, resolen el problema del desbalanceig de classes, tot i que es redueix considerablement el nombre d'exemples. 
 
 \begin{table}[hbt!]
 \centering
@@ -228,11 +237,11 @@ Passant a les variables explicatives, quan es treballa amb imatges és difícil 
 
 De la figura \ref{fig:sample_random}, com que s'han utilitzat les dades amb organització balancejada, es pot comprovar que algunes  de les classes s'han unit en una sola ("W/w", "O/o"...). També podem fer-nos una primera idea de la dificultat del problema. La majoria d'exemples es poden reconèixer a primer cop d'ull, però algun exemple com el de la segona fila sisena columna amb etiqueta "Z/z", sense cap altre context, una persona ho podria llegir com a "2".
 
-Per a fer-nos una idea de com són els exemples per classe, s'han visualitzat alguns exemples per classe (Annex Figura \ref{fig:sample_by_label}). Aquesta figura ajuda a veure similituds i diferències entre classes. Es pot veure que a simple vista i sense cap altre context, les imatges amb classes ["1", "I/i", "L/l"] són molt similars, el mateix per les classes ["0", "O/o"], ["q" i "9"], ["h", "n"] i potser ["a", "2"]. També podem veure que hi ha alguns errors d'etiquetació o de formulari, o potser s'ha perdut qualitat d'imatge a causa del preprocessament, però de la classe "G" la columna 6 sembla una "S/s", de la classe "H" la columna 2 sembla una "W/w", de la classe "g" la columna 1 sembla "a" i de la classe "q" la columna 7 sembla "8". Per tant, estem davant d'un problema de classificació per al qual, fins i tot per l'ull humà i sense cap altre context, seria difícil aconseguir una precisió propera al 95\%. També s'ha calculat la intensitat del píxel mitjà per a cada classe i s'ha projectat en una imatge, el que dóna una idea força clara de la imatge mitjana en cada classe, o de les regions de la imatge en que el caràcter s'acostuma a veure (Figura \ref{fig:samples_by_mean}).
+Per a fer-nos una idea de com són els exemples per classe, s'han visualitzat alguns exemples per classe (Figura \ref{fig:sample_by_label}). Aquesta figura ajuda a veure similituds i diferències entre classes. Es pot veure que a simple vista i sense cap altre context, les imatges amb classes ["1", "I/i", "L/l"] són molt similars, el mateix per les classes ["0", "O/o"], ["q" i "9"], ["h", "n"] i potser ["a", "2"]. També podem veure que hi ha alguns errors d'etiquetació o de formulari, o potser s'ha perdut qualitat d'imatge a causa del preprocessament, però de la classe "G" la columna 6 sembla una "S/s", de la classe "H" la columna 2 sembla una "W/w", de la classe "g" la columna 1 sembla "a" i de la classe "q" la columna 7 sembla "8". Per tant, estem davant d'un problema de classificació per al qual, fins i tot per l'ull humà i sense cap altre context, seria difícil aconseguir una precisió propera al 95\%. També s'ha calculat la intensitat del píxel mitjà per a cada classe i s'ha projectat en una imatge, el que dóna una idea força clara de la imatge mitjana en cada classe, o de les regions de la imatge en que el caràcter s'acostuma a veure (Figura \ref{fig:samples_by_mean}).
 
 Una altra idea per a veure aquestes similituds i diferències entre classes, és aplicar tècniques no supervisades de reducció de dimensions. Una tècnica que acostuma a donar bons resultats per a visualitzacions de clústers d'espais d'alta dimensió és el t-SNE (de les sigles en anglès \textit{t-Distributed Stochastic Neighbor Embedding}). El t-SNE és una tècnica de reducció de dimensions no lineal de tipus \textit{manifold learning}, que consisteix en modelar cada exemple d'alta dimensió en un punt de 2-3 dimensions a partir del càlcul de les probabilitats conjuntes, de manera que exemples similars es situaran més propers que exemples diferents, el que ho fa un mètode perfecte per visualitzar clústers.
 
-Com que tenim una mostra d'entrenament i dimensions grans (101,520 exemples, 784 variables), per a reduir soroll i temps computacional, és bona idea aplicar un segon mètode de reducció de dimensions abans d'utilitzar t-SNE. S'ha utilitzat el mètode de components principals per a reduir la dimensió fins a un 95\% de la variància explicada (113 components), i tot seguit s'ha aplicat t-SNE obtenint 2 variables finals. Tot i que és difícil mapejar 47 classes diferents, l'algoritme t-SNE dóna resultats bastant satisfactoris (Figura \ref{fig:pca_tsne}). En la Figura \ref{fig:pca_tsne} es mostren les 2 dimensions resultants, on cada color és una classe. En la regió sud es veuen una serie de clústers ben separats ["u", "w", "N", "m", "H"]. Seguint el sentit de les agulles del rellotge en la regió sud-oest es veu un clúster de ["0", "O"], juntament amb els clústers ["D" i Q"], indicant que per aquesta zona els caracter són arrodonits. A l'oest hi ha els clústers ["G", "C", "e", "6"]. Al nord-oest es veuen els ["8", "3", "5"]. A la regió nord, nord-est hi ha caràcters formats per un segment central vertical, tal com el gran clúster ["1", "l", "I"], juntament amb els clústers ["T", "J", "7", "f"]. Finalment a la regió est hi ha caràcters formats per més d'un segment diagonal al pla horitzontal ["y", "V", "X"]. 
+Com que tenim una mostra d'entrenament i dimensions grans (101,520 exemples, 784 variables), per a reduir soroll i temps computacional, és bona idea aplicar un segon mètode de reducció de dimensions abans d'utilitzar t-SNE. S'ha utilitzat el mètode de components principals per a reduir la dimensió fins a un 95\% de la variància explicada (113 components), i tot seguit s'ha aplicat t-SNE obtenint 2 variables finals. Tot i que és difícil mapejar 47 classes diferents, l'algoritme t-SNE dóna resultats bastant satisfactoris (Figura \ref{fig:pca_tsne}). En la Figura \ref{fig:pca_tsne} es mostren les 2 dimensions resultants, on cada color és una classe. En la regió sud es veuen una serie de clústers ben separats ["u", "w", "N", "m", "H"]. Seguint el sentit de les agulles del rellotge en la regió sud-oest es veu un clúster de ["0", "O"], juntament amb els clústers ["D", Q"], indicant que per aquesta zona els caracter són arrodonits. A l'oest hi ha els clústers ["G", "C", "e", "6"]. Al nord-oest es veuen els ["8", "3", "5"]. A la regió nord, nord-est hi ha caràcters formats per un segment central vertical, tal com el gran clúster ["1", "l", "I"], juntament amb els clústers ["T", "J", "7", "f"]. Finalment a la regió est hi ha caràcters formats per més d'un segment diagonal al pla horitzontal ["y", "V", "X"]. 
 
 Si volem veure de mes aprop algunes de les classes més sobreposades tals com ["0", "O/o", "Q", "D"] o ["I/i", "L/l", "1"], podem entrenar un t-SNE amb aquestes classes per separat (Figura \ref{fig:tsne2}). Com era d'esperar, tot i que una part de les imatges de les classes "D" i "Q" es diferencien de la resta, tant "O/o" com "0" es barregen en el mateix clúster. Similarment, tot i que algunes "L/l" i "I/i" es distingueixen de la resta (segurament majuscules "L", o "i"), les classes "L/l", "1" i "I/i" són difícils de distingir. Això fa veure que seran necessaris models molt complexos si es vol arribar a distingir entre aquestes classes, o s'haurà de recórre a altres alternatives tals com modelar números i lletres per separat, modelitzar imatges segmentades per línies o aconseguir informació de context adicional (en quina posició s'està de la paraula, paraula després d'un punt...).
 
@@ -277,54 +286,56 @@ Altres tècniques de preprocessament poden ajudar a millorar i regularitzar els 
 
 En aquesta part del treball s'han de buscar els models candidats. En principi, qualsevol model de classificació pot ser utilitzat, però n'hi haurà que classificaran millor i més eficientment les dades EMNIST. Aquesta és una tasca de classificació multiclasse, però encara que un model sigui per naturalesa de classificació binària (ex: model logístic, SVM), es poden utilitzar estratègies com OvO (\textit{one versus one}) o OvA (\textit{one versus all}) i fer-los servir com a classificació multiclasse. 
 
-Primer s'han entrenat tots els models sense un afinament d'hiperparàmetres (paràmetres del model no entrenables que controlen la regularització, velocitat d'aprenentatge...) excessiu i amb una mostra reduïda, i s'han avaluat tant sobre la mostra d'entrenament com sobre la de validació, per a comprovar l'\textit{overfitting}/\textit{underfitting} dels models (Taula \ref{tab:taula2}). A partir d'aquí s'han triat els models que han semblat tenir major potencial, s'han afinat els hiperparàmetres i s'han entrenat els models finals. 
+En aquests tipus de problemes, es té una matriu de dades $X$ amb $n$ files i $m$ columnes ($n\times m$) anomenada matriu d'inputs, i un vector $y$ d'outputs amb $K$ classes diferents i mida $n$. Les prediccions de classe són $\hat{y}$. Els models estimats, si són paramètrics, normalment tenen un vector de paràmetres $\beta$. També tenen una funció de cost $J(\beta)$ que es vol optimitzar (normalment minimitzar). 
+
+Per a la part pràctica, primer s'han entrenat tots els models sense un afinament d'hiperparàmetres (paràmetres del model no entrenables que controlen la regularització, velocitat d'aprenentatge...) excessiu i amb una mostra reduïda, i s'han avaluat tant sobre la mostra d'entrenament com sobre la de validació, per a comprovar l'\textit{overfitting}/\textit{underfitting} dels models (Taula \ref{tab:taula2}). A partir d'aquí s'han triat els models que han semblat tenir major potencial, s'han afinat els hiperparàmetres i s'han entrenat els models finals. 
 
 \subsubsection{Regressió logística multinomial}
 
 El model de regressió logística multinomial és una generalització del model de regressió logística per a més de 2 classes, sense haver de recórrer l'estratègia OvA i estimar més d'un model per separat \cite{stanford}:
 
 $$
-h_\beta(X) = \frac{1}{1 + \exp(-\beta)X}
+h(X) = \frac{1}{1 + \exp(-\beta)X}
 $$
 
 S'entrenen els paràmetres $\beta$ del model per a minimitzar la funció de cost:
 
 $$
-J(\beta) = -[\sum^n_{i = 1} y_i \log h_\beta (x_i) + (1 - y_i) \log (1 - h_\beta(x_i))]
+J(\beta) = -[\sum^n_{i = 1} y_i \log h (x_i) + (1 - y_i) \log (1 - h(x_i))]
 $$
 
 En regressió logística multinomial, s'utilitza la funció \textit{softmax} per a generalitzar el model:
 
 $$
-h_\beta(X) = \frac{\exp(\beta^T X)}{\sum P^K_{j=1} \exp(\beta_j^T X)}
+h(X) = \frac{\exp(\beta^T X)}{\sum^K_{j=1} \exp(\beta_{j,}^T X)}
 $$
 
-on $K$ és el nombre de classes a classificar, i $\beta$ és una matriu de paràmetres de dimensions $(m, K)$ i $m$ és el nombre d'inputs. La funció de cost és:
+on $\beta$ és la matriu de paràmetres de mida $(m\times K)$, i $h(X)$ és un vector de probabilitats de dimensions k. La funció de cost és:
 
 
 $$
-J(\beta) = - [\sum^n_{i = 1}\sum^K_{k = 1} y_{i}(k) \log\frac{\exp(\beta_k^T X_i)}{\sum^K_{j = 1}\exp(\beta_j^T X_i)}]
+J(\beta) = - [\sum^n_{i = 1}\sum^K_{k = 1} y_{i}(k) \log\frac{\exp(\beta_k^T X_i)}{\sum^K_{j = 1}\exp(\beta_{j,}^T X_i)}]
 $$
 
 Aquesta equació ens permet obtenir fàcilment les probabilitats de classe:
 
 $$
-P(y_i = k | x_i ; \beta) =  \frac{\exp(\beta_k^T X_i)}{\sum^K_{j = 1}\exp(\beta_j^T X_i)}
+P(y_i = k | x_i ; \beta) =  \frac{\exp(\beta_k^T X_i)}{\sum^K_{j = 1}\exp(\beta_{j,}^T X_i)}
 $$
 
-No es pot resoldre el mínim de $J(\beta$) però a partir de derivades parcials, es pot treure el gradient per a l'estimació de paràmetres:
+En general no es pot trobar el mínim de $J(\beta$) però a partir de derivades parcials, es pot obtenir el gradient per a l'estimació de paràmetres:
 
 $$
-\nabla_\beta (k) J(\beta) = -\sum^m_{i = 1} [X_i (y_i(k) - P(y_i = k | x_i ; \beta))]
+\nabla_{(k)} J(\beta) = -\sum^m_{i = 1} [X_i (y_i(k) - P(y_i = k | x_i ; \beta))]
 $$
 
 Abans d'entrenar el model, és necessari reduir les dimensions amb alguna tècnica com PCA, perquè en cas contrari es complica trobar una solució òptima fàcilment (sense gastar recursos computacionals). Amb 113 components s'ha conservat el 95\% de la variància explicada, i s'han escalat els inputs. El model de regressió logística multinomial inicial, ha estat entrenat amb una submostra de 10,000 exemples, i s'ha utilitzat l'optimitzador \textit{limited-memory BFGS} amb regularització l2 i l'hiperparàmetre regulador C = 1, amb una tolerància de 0.001 i 500 iteracions màximes.
 
-\subsubsection{Lineal SVM}
+\subsubsection{SVM Lineal}
 
-La idea dels classificadors SVM bé donada per la següent idea: Si tenim dues classes que es poden separar linealment sense cap traspàs de classe, com es pot maximitzar l'amplada de la "carretera" que separa les dues classes? Aquesta separació depèn només de les observacions que toquen els límits de la carretera. I aquests límits se'ls anomena \textit{support vectors}.
+La idea dels classificadors SVM bé donada per la següent idea: Si tenim dues classes que es poden separar linealment sense cap traspàs de classe, com es pot maximitzar l'amplada de la ''carretera'' que separa les dues classes? Aquesta separació depèn només de les observacions ''que toquen els límits de la carretera''. I aquests límits se'ls anomena \textit{support vectors}.
 
- Els classificadors SVM són models que s'utilitzen per a separar (i per tant predir) clases binàries. La separació entre classe i classe és definida per la línia de decisió del model, i en un SVM aquesta és causada pels support vectors \cite[Cap. 5]{geron2019hands}: 
+ Els classificadors SVM són models que s'utilitzen per a separar (i per tant predir) classes binàries. La separació entre classe i classe és definida per la línia de decisió del model, i en un SVM aquesta és determinada pels support vectors \cite[Cap. 5]{geron2019hands}: 
 
 $$
 \hat{y} = \begin{cases} 
@@ -333,7 +344,7 @@ $$
 \end{cases}
 $$
 
-on $\hat{y}$ és la predicció de la classe, $\beta$ és el vector de pesos i $X$ la matriu d'inputs. El pendent dels pesos $||w||$ és inversament proporcional a la distància de separació (en l'equació el -1 i l'1), per tant, es vol minimitzar $ \frac{1}{2} w^T w$ que és equivalent a $ \frac{1}{2}||w||^2$ però amb una derivada simple:
+on $\hat{y}$ és la predicció de la classe, $\beta$ és el vector de pesos i $X$ la matriu d'inputs. El pendent dels pesos $||w||$ és inversament proporcional a la distància de separació (en l'equació el $-1$ i l'$1$), per tant, es vol minimitzar $ \frac{1}{2} w^T w$ (que és equivalent a $ \frac{1}{2}||w||^2$) però amb una derivada simple:
 
 
 \begin{equation} 
@@ -343,9 +354,9 @@ on $\hat{y}$ és la predicció de la classe, $\beta$ és el vector de pesos i $X
 \end{split}
 \end{equation}
 
-on $l_w$ és 1 en instàncies amb classe positiva i -1 en instàncies amb classe negativa.
+on $l_y$ és 1 en instàncies amb classe positiva i -1 en instàncies amb classe negativa.
 
-Aquesta és la funció objectiu a minimitzar si les classes són linealment separables. Si no ho són, s'ha d'introduir una variable de control $\zeta$, que controlarà quanta distància s'està traspassant cada instància de la línia de decisió. Amb aquesta nova variable es té el nou objectiu addicional de reduir observacions fora de la línia de decisió, presentant un problema de QP (de les sigles en anglès \textit{Quadràtic Probramming}):
+Aquesta és la funció objectiu a minimitzar si les classes són linealment separables. Si no ho són, s'ha d'introduir una variable de control $\zeta$, que controlarà la distància traspassada per a cada exemple fora de la seva regió de classe. Amb aquesta nova variable, es té un segon objectiu de reduir observacions fora de la línia de decisió, presentant un problema de QP (de les sigles en anglès \textit{Quadràtic Probramming}):
 
 \begin{equation} 
 \begin{split}
@@ -355,9 +366,18 @@ Aquesta és la funció objectiu a minimitzar si les classes són linealment sepa
 \end{split}
 \end{equation}
 
-on $n$ és el nombre d'exemples i $C$ és l'hiperparàmetre regularitzador. Una $C$ més baixa crea més distància entre support vectors, permetent més violacions de la línia de decisió (més regularització, més \textit{underfitting}). Una $C$ més alta evita aquestes violacions (menys regularització, més \textit{overfitting}). 
+on $n$ és el nombre d'exemples i $C$ és l'hiperparàmetre regularitzador. Una $C$ més alta dona més pes a  les observacions fora de regió de classe, evitant-les i per tant reduint la distància entre support vectors (menys (\textit{overfitting}) (Figura \ref{fig:svc_exp}).
 
-Per a entrenar el nostre lineal SVM inicial, s'ha utilitzat una submostra d'entrenament de 10,000 exemples. Com que rangs diferents entre els inputs afecten el rendiment del model, s'han escalat les dades. Per a l'optimització s'ha utilitzat SGD (de les sigles en anglès \textit{stochastic gradient descent}) amb regularització l2 i hiperparàmetre factor de regularització, $\alpha = 10^{-4}$ (com més alt, més regularització, és un factor que multiplica a $C$), amb una tolerància de $5 \times 10^{-3}$ i 500 iteracions màximes.
+\begin{figure}[hbt!]
+\centering
+\includegraphics[width = 1\linewidth]{images/svc_exp.png}
+\captionof{figure}{Exemple paràmetre C en SVC \cite{geron2019hands}}
+\label{fig:svc_exp}
+\end{figure}
+
+
+
+Per a entrenar el nostre SVM lineal inicial, s'ha utilitzat una submostra d'entrenament de 10,000 exemples. Com que rangs diferents entre els inputs afecten el rendiment del model, s'han escalat les dades. Per a l'optimització s'ha utilitzat SGD (de les sigles en anglès \textit{stochastic gradient descent}) amb regularització l2 i hiperparàmetre factor de regularització, $\alpha = 10^{-4}$ (com més alt, més regularització, és un factor que multiplica a $C$), amb una tolerància de $5 \times 10^{-3}$ i 500 iteracions màximes.
 
 
 \subsubsection{Kernel SVM}
@@ -448,11 +468,7 @@ Les \textit{pooling layers} tenen com a objectiu encongir l'input de la imatge p
 
 Algunes arquitectures (estructures) s'ha fet conegudes per la seva gran utilitat, tal com LeNet-5, molt utilitzada en reconeixement de dígits, AlexNet, guanyadora del concurs ImageNet ILDVRC el 2012 o GoogLeNet, entre moltes altres.
 
-Per entrenar CNN, s'ha utilitzat una estructura similar a LeNet-5, amb una capa convolucional de mida 32, i rang de visió 3, i una segona capa convolucional de mida 64 i rang de visió 3. Tot seguit s'ha utilitzat una pooling layer, aplanades les neurones i passades a un MLP amb 128 neurones aplicant dropout. Finalment s'ha passat a la capa output. Les funcions d'activació han estat ReLU i pels outputs softmax.
-
-
-
-
+Per entrenar CNN, s'ha utilitzat una estructura similar a LeNet-5 (fig:\ref{fig:estruc_cnn}), amb una capa convolucional de mida 32, i rang de visió 3, i una segona capa convolucional de mida 64 i rang de visió 3. Tot seguit s'ha utilitzat una pooling layer, aplanades les neurones i passades a un MLP amb 128 neurones aplicant dropout. Finalment s'ha passat a la capa output. Per a les funcions d'activació s'han utilitzat la ReLU i pels outputs la softmax.
 
 
 
@@ -467,8 +483,8 @@ Per entrenar CNN, s'ha utilitzat una estructura similar a LeNet-5, amb una capa 
                                               & N         & T (s)  & Acc train (\%) & Acc val (\%) \\  
 \midrule
 Regressió logística multinomial  & 10,000 & 5   & 77.0        & 63.4 \\
-Lineal SVM                              & 10,000 & 41  & 73.3       & 61.8  \\
-Lineal SVM amb PCA                & 10,000 & 5    & 70.4       & 56.7  \\
+SVM Lineal                              & 10,000 & 41  & 73.3       & 61.8  \\
+SVM Lineal amb PCA                & 10,000 & 5    & 70.4       & 56.7  \\
 Kernel SVM                             & 5,000   & 5    & 89.0       & 68.8  \\
 Kernel SVM amb PCA               & 5,000   & 3    & 94.5       & 64.8  \\
 Random Forest                        & 10,000 & 10  & 100.0     & 72.3 \\
@@ -482,9 +498,45 @@ CNN					     & 10,000 * 5   & 158 & 75.3 & 80.4 \\
 \label{tab:taula2}
 \end{table}
 
-A la taula (Taula :\ref{tab:taula2}) s'han obtingut els resultats dels primers models plantejats. Els models amb la major precisió en la mostra de validació són la CNN, l'ANN, el random forest i el kernel SVM. Especialment les xarxes neuronals, tenen una precisió major en la mostra de validació que en la mostra d'entrenament, el que indica que els models pateixen \textit{underfitting} (quan són models amb complexitat fàcil d'augmentar), i si utilitzem la mostra d'entrenament completa, augmentem el nombre d'\textit{epochs} o augmentem la complexitat de la xarxa, podriem obtenir millors resultats. Contràriament, el random forest i el kernel SVM pateixen overfitting, si augmentem els hiperparàmetres de regularització és possible que augmenti la precisió en noves dades. El següent pas és afinar els models modificant els hiperparàmetres i entrenar-los amb la mostra completa.
+A la taula (Taula :\ref{tab:taula2}) s'han obtingut els resultats dels primers models plantejats. Els models amb la major precisió en la mostra de validació són la CNN, l'ANN, el random forest i el kernel SVM. Especialment les xarxes neuronals, tenen una precisió major en la mostra de validació que en la mostra d'entrenament, el que indica que els models pateixen \textit{underfitting} (quan són models amb complexitat fàcil d'augmentar), i si utilitzem la mostra d'entrenament completa, augmentem el nombre d'\textit{epochs} o augmentem la complexitat de la xarxa, podriem obtenir millors resultats. Contràriament, el random forest i el kernel SVM pateixen overfitting, si augmentem els hiperparàmetres de regularització és possible que augmenti la precisió en noves dades. 
+
+Per als models kernel SVM i random forest s'ha fet el refinament d'hiperparàmetres a partir d'una cerca aleatòria combinada amb \textit{cross validation}. Ha estat un procés iteratiu, on a partir d'una cerca àmplia, s'han fet gràfics (Figura \ref{fig:hyper_svm}) per a visualitzar tendències i encongir l'espai d'hiperparàmetres. 
+
+Per a les xarxes neuronals, no s'ha cambiat l'estructura utilitzada anteriorment (Figures \ref{fig:nn_estructure}, \ref{fig:estruc_cnn}). Referent a la ANN, s'ha fet una búsqueda ràpida del \textit{learning rate} a partir d'una búsqueda incremental exponencial (sobre un \textit{epoch} s'ha augmentat el learning rate per un factor de 1.005 per iteració). El punt perillos és quan la funció de cost es dispara, per això s'ha elegit un valor de 0.1 per entrenar la xarxa (Figura \ref{fig:learningRate}). 
+
+\begin{figure}[hbt!]
+\centering
+\includegraphics[width = 0.5\linewidth]{images/lr.png}
+\captionof{figure}{Busqueda incremental exponencial del Learning rate}
+\label{fig:learningRate}
+\end{figure}
+
+Un cop obtingut el \textit{learning rate}, en 6 epochs s'ha trobat el millor model de manera molt ràpida. S'ha entrenat amb early stopping de 20 epochss, i a la Figura \ref{fig:nn_train} es pot veure el progrés l'entrenament de la xarxa segons els epochs. La funció de cost arriba al mínim a l'epoch 6, i tot seguit puja degut al sobreentrenament dels paràmetres. Tot i aquest sobreentrenament, la precisió de la mostra de validació es manté constant.
+
+Per a la CNN, s'ha entrenat amb early stopping de 3 epochs. El millor model s'ha obtingut a l'epoch 7 \ref{fig:cnn_train}. La mostra de validació també s'ha estabilitzat. 
+
+Els resultats dels models es poden veure a la Taula \ref{tab:taula3}.
+
+\begin{table}[hbt!]
+\centering
+\begin{tabular}{lcccc}  
+\toprule
+                                              & N              & Acc train (\%) & Acc val (\%) & Acc test (\%)\\  
+\midrule
+Kernel SVM                             & 101,520      &  89.4            & 80.2               & 79.9\\
+Random Forest                        & 101,520      & 100.0           & 83.2               & 82.6\\
+ANN 				             & 101,520 * 6 & 89.0             &  84.8              & 83.9 \\
+CNN					     & 101,520 * 7 & 91.1             &  88.0              &  87.4 \\
+\bottomrule
+\end{tabular}
+\captionof{table}{Models amb el seu rendiment (precisió) entrenats a les dades EMNIST amb organització balancejada. Les columnes són }
+\label{tab:taula3}
+\end{table}
 
 
+El model amb millor precisió és la CNN. Si els errors són suficientment diferents, és possible que un model d'\textit{ensemble learning} tal com un \textit{voting classifier} tingui més precisió que els models individuals. 
+
+S'han comparat les matrius de confusió (Figura \ref{fig:conf_matrix_RF}), però són força similars, errors que ja hem vist a la visualització entre ["0" i "O/o"], ["1", "I/i", "l"], ["F", "f"]...
 
 
 
@@ -492,15 +544,7 @@ A la taula (Taula :\ref{tab:taula2}) s'han obtingut els resultats dels primers m
 % (4)
 \section{Conclusions}
 
-[TODO]
-
-Parlar sobre que queda per explorar:
-
-- Reducció de dimensions utilitzant autoencoders
-- Comparació amb mètodes classics d'extracció de variables
-- Anàlisi de frases amb RNN.
-- Models més complexos.
-- Data augmentation.
+Durant el treball, s'han après noves tècniques que no s'han vist durant el grau tals com visualització a partir de t-SNE, SVC, DNN i CNN, però que gràcies als coneixements del grau s'han pogut entendre i implementar amb relativa facilitat. El problema EMNIST plantejat ha resultat ser un repte més difícil del que s'esperava. L'alta dimensionalitat de les dades, el gran nombre de classes a predir i la similitud entre aquestes classes el fan un bon repte digne d'estudi.  La recerca sobre els diferents temes durant el treball m'ha fet veure que la informació que s'ha exposat en aquest projecte és molt introductiva, i no és més que la punta de l'iceberg. L'OCR, l'aprenentatge supervisat i el \textit{deep learning} és un tema de recerca que dóna molt de si. Algunes idees d'àrees d'investigació per a expandir aquest treball són la investigació d'altres tècniques de la  reducció de dimensions tals com \textit{autoencoders} o kernel PCA, l'aplicació de mètodes de \textit{feature extraction} juntament amb la comparació de mètodes clàssics amb actuals, continuar la recerca de \textit{deep learning}, l'ús de TCN per a segmentació de text, l'ús de RNN tals com LSTM per la classificació de sèries de caràcters, tècniques de preprocessament tals com \textit{data augmentation}, tècniques d'\textit{ensemble learning} i tècniques d'afinament d'hiperparàmetres.
 
 
 % Annex
@@ -556,6 +600,16 @@ Parlar sobre que queda per explorar:
 
 %%%
 
+\begin{figure}[hbt!]
+\centering
+\includegraphics[width = 0.65\linewidth]{images/estruc_cnn.png}
+\captionof{figure}{Capes de la CNN a modelitzar, amb el nombre de neurones per capa d'input i output.}
+\label{fig:estruc_cnn}
+\end{figure}
+
+
+%%%
+
 \begin{figure}
   \begin{subfigure}[t]{.47\textwidth}
     \centering
@@ -578,12 +632,40 @@ Parlar sobre que queda per explorar:
     \centering
     \includegraphics[width=\linewidth]{images/hyper_svm4.png}
   \end{subfigure}
-  \captionof{figure}{Els resultats de les 4 fases d'afinament d'hyperparàmetres per el model final de kernel SVC. Es mostra la precisió mitjana dels models resultants de la cross validation, segons l'hyperparàmetre marginal. En cada fase s'han restringit més els hyperparàmetres segons les tendències observades.}
+  \captionof{figure}{Els resultats de les 4 fases d'afinament d'hiperparàmetres per al model final de kernel SVC. Es mostra la precisió mitjana dels models resultants de la cross validation, segons l'hiperparàmetre marginal. En cada fase s'han restringit més els hiperparàmetres segons les tendències observades.}
   \label{fig:hyper_svm}
 \end{figure}
 
+%%%
 
+\begin{figure}[hbt!]
+\centering
+\includegraphics[width = 1\linewidth]{images/nn_train1.png}
+\captionof{figure}{Entrenament del MLP. S'observa la tendència de la funció de cost, juntament amb la precisió tant per la mostra d'entrenament com la de validació .Early stopping en 20 \textit{epochs}}
+\label{fig:nn_train}
+\end{figure}
 
+\begin{figure}[hbt!]
+\centering
+\includegraphics[width = 1\linewidth]{images/cnn_train1.png}
+\captionof{figure}{Entrenament de la CNN. s'observa la tendència de la funció de cost, juntament amb la precisió tant per la mostra d'entrenament com la de validació. Early stopping de 3 \textit{epochs}}
+\label{fig:cnn_train}
+\end{figure}
+
+\begin{figure}[hbt!]
+\centering
+\includegraphics[width = 1\linewidth]{images/conf_matrix_RF.png}
+\captionof{figure}{Matriu de confusió sobre la mostra de validació del model de random forest}
+\label{fig:conf_matrix_RF}
+\end{figure}
+
+\clearpage
+\section{Codi}
+
+El codi s'ha fet en python, es pot trobar en forma de llibretes Jupyter a: 
+
+https://github.com/cesc1/TFG/tree/main/code
+\clearpage
 
 % Fitxer bibliografia scibib.bib
 
