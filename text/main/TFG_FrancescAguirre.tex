@@ -345,7 +345,7 @@ on $\hat{y}$ és la predicció de la classe, $\beta$ és el vector de pesos i $X
 
 on $l_w$ és 1 en instàncies amb classe positiva i -1 en instàncies amb classe negativa.
 
-Aquesta és la funció objectiu a minimitzar si les classes són linealment separables. Si no ho són, s'ha d'introduir una variable de control $\zeta$, que controlarà quanta distància s'està traspassant cada instància de la línia de decisió. Amb aquesta nova variable es té el nou objectiu addicional de reduir observacions fora de la línia de decisió:
+Aquesta és la funció objectiu a minimitzar si les classes són linealment separables. Si no ho són, s'ha d'introduir una variable de control $\zeta$, que controlarà quanta distància s'està traspassant cada instància de la línia de decisió. Amb aquesta nova variable es té el nou objectiu addicional de reduir observacions fora de la línia de decisió, presentant un problema de QP (de les sigles en anglès \textit{Quadràtic Probramming}):
 
 \begin{equation} 
 \begin{split}
@@ -362,19 +362,76 @@ Per a entrenar el nostre lineal SVM inicial, s'ha utilitzat una submostra d'entr
 
 \subsubsection{Kernel SVM}
 
-[TODO explicació general]
+Un kernel és una funció capaç de calcular el producte escalar $f(a)^T \cdot f(b)$ sense haver de calcular ni saber sobre la transformació $f$ \cite[Cap. 5]{geron2019hands}:
 
-En aquest cas, per a entrenar el Kernel SVM s'ha utilitzat una submostra d'entrenament de 5,000 exemples. Això és degut a que el temps computacional per a entrenar Kernel SVM és entre $O(n^2 p)$  i $O(n^3 p)$ (on $n$ és la mida mostral i $k$ el nombre de variables), de manera que si augmentem el nombre d'exemples sense cura l'entrenament podria durar hores. Una alternativa és utilitzar SGD utilitzant una aproximació \textit{Nystroem} a priori \cite{sklearn}. S'ha utilitzat un kernel gaussià RBF (de les sigles en anglès \textit{radial basis function}), amb regularització l2 i hyperparàmetre C = 1, amb una tolerància de 0.001 i 500 iteracions màximes. 
+\begin{equation} 
+\begin{split}
+\text{Lineal}          & K(a,b) = a^Tb \\
+\text{Polinomic }    & K(a,b) = (\gamma a^T b + r)^d \\
+\text{Gaussià RBF}& K(a,b) = \exp(-\gamma ||a - b||^2) \\
+\text{Sigmoid}       & K(a,b) =  \tanh(\gamma a^Tb + r)\\
+\end{split}
+\end{equation}
+
+Teorema de Mercer: Si una funció $K(a,b)$ respecta les condicions de Mercer ($K$ contínua i simètrica...), llavors existeix una funció $f$ que pot mapejar $a$ i $b$ en un altre espai (possiblement en una dimensió mès alta) de manera que $K(a,b) = f(a)^T \cdot f(b)$. 
+
+
+Els kernels són útils si s'està utilitzant variables per a calcular un producte escalar, i es vol augmentar la complexitat de l'algoritme (tal com regressió polinòmica). Això normalment augmentaria les dimensions, nombre de paràmetres... augmentant el nivell computacional, però a partir del kernel la transformació és computacionalment eficient, ja que no s'ha de calcular el mapejat abans de fer el producte escalar. El kernel Gaussià RBF és un exemple de kernel que  mapejar en un espai d'infinites dimensions. Per a fer prediccions s'utilitza:
+
+$$
+h_{\hat{w}, \hat{b}}(f(x)) = \sum^m_{i = 1} \hat{\alpha}_i t_i K(x_i, x) + b
+$$
+
+Per a entrenar el nostre Kernel SVM inicial, s'ha utilitzat una submostra d'entrenament de 5,000 exemples. Això és degut a que el temps computacional per a entrenar Kernel SVM és entre $O(n^2 p)$  i $O(n^3 p)$ (on $n$ és la mida mostral i $k$ el nombre de variables), de manera que si augmentem el nombre d'exemples sense cura l'entrenament podria durar hores. Una alternativa és utilitzar SGD utilitzant una aproximació \textit{Nystroem} a priori \cite{sklearn}. S'ha utilitzat un kernel gaussià RBF (de les sigles en anglès \textit{radial basis function}), amb regularització l2 i hyperparàmetre C = 1, amb una tolerància de 0.001 i 500 iteracions màximes. 
 
 \subsubsection{Random Forest}
 
-[TODO explicació general]
+Els arbres de regressió són models flexibles que funcionen tant per classificació com per regressió. Els arbres es creen recursivament a partir de particions de la mostra d'entrenament en submostres (branques). Es busquen totes les particions possibles (ex: exemples que compleixin $X_1 < 100$ passen a la branca A, la resta a la branca B), i es tria la que minimitzi l'index de puresa utilitzat en l'arbre:
 
-Per a entrenar el random forest s'ha utilitzat una submostra d'entrenament de 10,000 exemples, utilitzant 100 arbres sense restriccions i amb mostres \textit{bootstrap}. 
+\begin{equation} 
+\begin{split}
+\text{Deviança: } & D_i = -2 \sum_k n_{i,k} \log(p_{i,k}) \\
+\text{Entropia: }&  D_i = -2 \sum_k p_{i,k}\log(p_{i,k}\\
+\text{Gini: }& \sum_k p_{i,k}(1 - p_{i,k} = 1 - \sum_k p_{i,k}^2
+\end{split}
+\end{equation}
+
+on $n_{i,k}$ és el nombre d'observacions de classe $k$ en el node $i$, i $p_{i,k}$ la proporció observada d'individus de classe $k$ en el node $i$. 
+
+Un algoritme per entrenar arbres individuals és el CART (de les sigles en anglès \textit{Classification and Regression Tree}). Els arbres de classificació en sí però, acostumen a sobrentrenar el model i poden ser inestables, sent sensibles a la rotació de les dades i a petits canvis en la mostra. Una opció per estabilitzar el model és utilitzar components principals abans d'entrenar el model, i una segona segona opció que dona molt bons resultats predictius (a canvi de disminuir l'explicabilitat) és la tècnica \textit{random forest}.
+
+El model random forest és una tècnica d'\textit{ensemble learning}, format per un conjunt d'arbres de classificació (o regressió). Normalment s'utilitzen mètodes de remostreig per el seu entrenament tals com \textit{bagging} o \textit{pasting}. El remostreig fa que es creïn diferents arbres, en cada iteració, i un cop es tenen tots els arbres s'agreguen les prediccions (ex: un estadístic com la moda). Cada arbre té més biaix (mostra més petita o instàncies repetides) però  l'agregació redueix tant el biaix com la variancia, generalment resultant en un biaix similar però menor variancia que un sol arbre.
+
+Per a entrenar el random forest inicial, s'ha utilitzat una submostra d'entrenament de 10,000 exemples, utilitzant 100 arbres sense restriccions i amb mostres \textit{bootstrap}. 
 
 \subsubsection{ANN}
 
-[TODO explicació general]
+Les xarxes neuronals són models molt flexibles, amb infinitat d'hiperparàmetres i amb molt potencial. Consistèixen en estructures organitzades per neurones, i aquestes s'organitzen per capes, i sempre hi haurà la primera capa de neurones input (tantes com variables) i la ultima d'outputs (tantes com classes). Les capes centrals s'anomenen capes ocultes. En un \textit{feed forward} MLP (de les sigles en anglès \textit{Multi Layer Perceptron}) amb capes completament connectades, es connecta cada neurona de la capa anterior amb totes les neurones de la capa posterior més el biaix, per exemple si hi tenim una primera capa de 50 inputs i la següènt capa té 30 neurones ocultes, entre les dos capes hi haurà 1530 paràmetres o pesos  a estimar. L'equació de l'output de la capa oculta serà:
+
+$$
+h^{12}_{W,b}(X) = f(XW_1 + b) = c_1
+$$
+
+on $h^{12}$ és la predicció entre la primera capa i la segona, $X$ és la matriu d'inputs, W són els pesos de connecció, $b$ és el biaix i $f$ és la funció d'activació per aconseguir la no-linealitat. Si s'afegeix una segona capa, l'equació serà:
+
+$$
+h^{13}_{W,b}(X) = f(b + W_2 \cdot c_1) = c_2
+$$
+
+I així succesivament segons s'afegeixin les capes. Algunes funcions d'activació són (a part de \textit{softmax} per les neurones output):
+ 
+\begin{align*}
+\text{Logística: }  \sigma(z) = & 1 / (1 + \exp(-z) \\
+\text{Hyperbòlica tangent: } = & \tanh(z) = 2\sigma(2z) - 1\\
+\text{Rectified Linear Unit: } ReLU = & \max(0, z) \\
+\text{ELU: }  ELU_\alpha(z) = & \alpha(exp(z) - 1) \text{ if} z < 0\textit{ , else }z
+\end{align*}
+
+Entrenar MLPs ha estat un problema que ha durat molts anys, i com més llargues més complicat es fa l'entrenament. En 1986 es va publicar un artícle \cite{rumelhart1985learning} introduïnt la tècnica de \textit{backpropagation} amb un mètode d'entrenar-les. Backpropagation utilitza Gradient Descent, passant la informació del \textit{minibatch} un cop cap endavant (càlculant i guardant l'output de totes les neurones) i un cop cap enderrera (càlcul de la contribució a l'error per output de neurona a partir de la regla de la cadena),  calculant l'error gradient de la xarxa per cada paràmetre \textit{autodiff} i així reduïnt l'error de la xarxa. És important inicialitzar aleatòriament totes les conneccións de les capes ocultes, o l'algoritme no funcionarà. Com a funció de cost en classificació, una bona opció és \textit{cross-entropy} a l'estar predint probabilitats.
+
+Altres estructures sencilles són l'ús de \textit{skipping layers}, que poden ajudar a aprendre els patrons més sencills de les dades i no passar-los per alt, o múltiples outputs utilitzats per a múltiples tasques diferents amb inputs similars i regularització \cite[Cap. 10]{geron2019hands}.
+
+Xarxes més profundes DNN (de les sigles en anglès \textit{Deep neural network}) tenen els seus propis problemes en la fase d'entrenament, tals com el problema dels \textit{vanishing/exploding gradients}. Durants els ultims 10 anys s'han trobant solucions a aquests problemes, tals com maneres correctes d'inicialitzar els pesos. funcions d'activació no saturables (ELU, leaky ReLU, SELU), \textit{Batch Normalization}, tècniques de regularització com \textit{dropout}... La elecció d'optimitzadors més ràpids per a DNN també és important. Algunes opcions són \textit{Momentum Optimization, AdaGrad i Adam Nadam} \cite[Cap. 11]{geron2019hands}.
 
 Per entrenar la xarxa neuronal o MLP (de les sigles en anglès multilayer perceptron), s'ha utilitzat una estructura seqüencial amb tres capes ocultes completament connectades (fig:\ref{fig:nn_estructure}). La primera capa d'inputs és la imatge de dimensions 28x28, la segona capa és de preprocessament, aplanant les dimensions a 784 neurones input, la següent és la primera capa oculta amb 400 neurones, la segona capa oculta té 200 neurones, la tercera té 100 neurones, i finalment la última capa és d'outputs. Les capes ocultes tenen funció d'activació ReLU, i la última capa té funció d'activació \textit{softmax}. 
 
@@ -436,6 +493,9 @@ Parlar sobre que queda per explorar:
 - Reducció de dimensions utilitzant autoencoders
 - Comparació amb mètodes classics d'extracció de variables
 - Anàlisi de frases amb RNN.
+- Models més complexos.
+- Data augmentation.
+
 
 % Annex
 \clearpage
